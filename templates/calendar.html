@@ -1,0 +1,178 @@
+
+
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Calendar with Events</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #e9ecef;
+        }
+        .calendar {
+            max-width: 350px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            overflow: hidden;
+            background: white;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #007bff;
+            color: white;
+            padding: 15px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .header button {
+            background: transparent;
+            color: white;
+            border: none;
+            font-size: 1.2em;
+            cursor: pointer;
+        }
+        .header button:hover {
+            text-decoration: underline;
+        }
+        .days {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            background: #f0f0f0;
+        }
+        .day {
+            padding: 10px;
+            text-align: center;
+            font-weight: bold;
+            color: #495057;
+            border-bottom: 1px solid #ccc;
+        }
+        .dates {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+        }
+        .date {
+            padding: 20px;
+            text-align: center;
+            border: 1px solid #e9ecef;
+            cursor: pointer;
+            position: relative;
+            transition: background 0.2s;
+        }
+        .date:hover {
+            background: #f1f1f1;
+            border-color: #007bff;
+        }
+        .event {
+            font-size: 0.9em;
+            color: #495057;
+            margin-top: 5px;
+            background-color: #e9ecef;
+            padding: 2px 5px;
+            border-radius: 3px;
+            display: inline-block;
+        }
+        @media (max-width: 400px) {
+            .calendar {
+                width: 90%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="calendar">
+        <div class="header">
+            <button id="prev">Previous</button>
+            <h2 id="monthYear"></h2>
+            <button id="next">Next</button>
+        </div>
+        <div class="days">
+            <div class="day">Sun</div>
+            <div class="day">Mon</div>
+            <div class="day">Tue</div>
+            <div class="day">Wed</div>
+            <div class="day">Thu</div>
+            <div class="day">Fri</div>
+            <div class="day">Sat</div>
+        </div>
+        <div id="dates" class="dates"></div>
+    </div>
+
+    <script>
+        const monthYear = document.getElementById('monthYear');
+        const dates = document.getElementById('dates');
+        const prevButton = document.getElementById('prev');
+        const nextButton = document.getElementById('next');
+
+        let currentDate = new Date();
+        const events = {};
+
+        function renderCalendar() {
+            const year = currentDate.getFullYear();
+            const month = currentDate.getMonth();
+
+            monthYear.textContent = currentDate.toLocaleString('default', { month: 'long', year: 'numeric' });
+
+            dates.innerHTML = '';
+
+            const firstDay = new Date(year, month, 1).getDay();
+            const lastDate = new Date(year, month + 1, 0).getDate();
+
+            for (let i = 0; i < firstDay; i++) {
+                const emptyDiv = document.createElement('div');
+                dates.appendChild(emptyDiv);
+            }
+
+            for (let date = 1; date <= lastDate; date++) {
+                const dateDiv = document.createElement('div');
+                dateDiv.className = 'date';
+                dateDiv.textContent = date;
+
+                // Display events if they exist
+                if (events[date]) {
+                    const eventText = document.createElement('div');
+                    eventText.className = 'event';
+                    eventText.textContent = events[date];
+                    dateDiv.appendChild(eventText);
+                }
+
+                // Add click event to add new events
+                dateDiv.addEventListener('click', () => {
+                    const event = prompt('Enter event for ' + date + ' ' + currentDate.toLocaleString('default', { month: 'long' }) + ':');
+                    if (event) {
+                        events[date] = event;
+                        renderCalendar(); // Re-render to show new event
+                    }
+                });
+
+                dates.appendChild(dateDiv);
+            }
+        }
+
+        prevButton.addEventListener('click', () => {
+            currentDate.setMonth(currentDate.getMonth() - 1);
+            renderCalendar();
+        });
+
+        nextButton.addEventListener('click', () => {
+            currentDate.setMonth(currentDate.getMonth() + 1);
+            renderCalendar();
+        });
+
+        // Initial render
+        renderCalendar();
+    </script>
+</body>
+</html>
+
+{% endblock %}
