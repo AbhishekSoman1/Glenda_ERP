@@ -1,0 +1,126 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="page-content-wrapper">
+    <div class="container-fluid">
+        <!-- Page Title and Breadcrumb -->
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="page-title-box">
+                    <div class="btn-group float-right">
+                        <ol class="breadcrumb hide-phone p-0 m-0">
+                            <li class="breadcrumb-item"><a href="#"></a></li>
+                            <li class="breadcrumb-item"><a href="#"></a></li>
+                            <li class="breadcrumb-item active"></li>
+                        </ol>
+                    </div>
+                    <h4 class="page-title">Vendor Details</h4>
+                </div>
+            </div>
+        </div>
+
+        <!-- Form Section -->
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="card">
+                    <div class="card-body">
+                        <form action="{% url 'vender_register_view' %}" method="post">
+                            {% csrf_token %}
+                            {{ form.non_field_errors }}
+
+                            <div class="form-group">
+                                <label>Pin code</label>
+                                {{ form.vendor_pincode }}
+                                {% for error in form.vendor_pincode.errors %}
+                                    <span class="text-danger">{{ error }}</span>
+                                {% endfor %}
+                            </div>
+
+                            <div class="form-group">
+                                <label>District</label>
+                                {{ form.vendor_district }}
+                                {% for error in form.vendor_district.errors %}
+                                    <span class="text-danger">{{ error }}</span>
+                                {% endfor %}
+                            </div>
+
+                            <div class="form-group">
+                                <label>State</label>
+                                {{ form.vendor_state }}
+                                {% for error in form.vendor_state.errors %}
+                                    <span class="text-danger">{{ error }}</span>
+                                {% endfor %}
+                            </div>
+
+                            <div class="form-group">
+                                <label>Country</label>
+                                {{ form.vendor_country }}
+                                {% for error in form.vendor_country.errors %}
+                                    <span class="text-danger">{{ error }}</span>
+                                {% endfor %}
+                            </div>
+
+                            <div class="form-group">
+                                <label>Street</label>
+                                {{ form.vendor_Street }}
+                                {% for error in form.vendor_Street.errors %}
+                                    <span class="text-danger">{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                            <!-- Other form fields -->
+
+                            <div class="form-group mb-0">
+                                <div>
+                                    <button type="submit" class="btn btn-primary waves-effect waves-light">Submit</button>
+                                    <button type="reset" class="btn btn-secondary waves-effect m-l-5">Cancel</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- jQuery code to fetch location based on pincode -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function() {
+        // Input field for pincode
+        $('#id_vendor_pincode').on('input', function() {
+            var pincode = $(this).val();
+
+            // Ensure the pincode is 6 digits long
+            if (pincode.length === 6) {
+                // Use India's Post Office API to fetch location details
+                $.ajax({
+                    url: 'https://api.postalpincode.in/pincode/' + pincode,
+                    method: 'GET',
+                    success: function(response) {
+                        if (response[0].Status === 'Success') {
+                            var postOffice = response[0].PostOffice[0];
+                            var district = postOffice.District;
+                            var state = postOffice.State;
+                            var street = postOffice.Name;
+                            var country = 'India'; // Set the Country field to a default value
+
+                            // Fill the form fields with the fetched data
+                            $('#id_vendor_district').val(district);
+                            $('#id_vendor_state').val(state);
+                            $('#id_vendor_Street').val(street);
+                            $('#id_vendor_country').val(country); // Update the Country field
+                        } else {
+                            alert('Invalid Pincode');
+                        }
+                    },
+                    error: function() {
+                        alert('Error fetching details. Please try again later.');
+                    }
+                });
+            }
+        });
+    });
+</script>
+{% endblock %}
