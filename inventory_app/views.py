@@ -3,9 +3,10 @@ from django.shortcuts import render, get_object_or_404, redirect
 
 
 from inventory_app.forms import Raw_materials_StockForm, Finished_Goods_StockForm,Damaged_Goods_StockForm
-from inventory_app.models import RawMaterialsStock
+from inventory_app.models import RawMaterialsStock,Finished_Goods_Stock
 from production_app.models import water_Finished_Goods,damaged_Goods
 from purchase_app.models import RawMaterials
+from Glenda_App.models import Menu
 
 from django.db.models import Sum
 
