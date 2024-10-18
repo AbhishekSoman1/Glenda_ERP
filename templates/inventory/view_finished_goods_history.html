@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block content %}
+
+<div class="page-content-wrapper">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="page-title-box">
+                    <div class="btn-group float-right">
+                        <ol class="breadcrumb hide-phone p-0 m-0">
+                            <li class="breadcrumb-item"><a href="#">Zoogler</a></li>
+                            <li class="breadcrumb-item"><a href="#">Tables</a></li>
+                            <li class="breadcrumb-item active">Editable</li>
+                        </ol>
+                    </div>
+                    <h4 class="page-title">Stock History</h4>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="mt-0 header-title"></h4>
+                        <p class="text-muted mb-4 font-13"></p>
+
+                        <table class="table mb-0" id="my-table">
+    <thead>
+        <tr>
+            <th>Category</th>
+            <th data-priority="1">name</th>
+            <th data-priority="3">size</th>
+            <th data-priority="3">stock</th>
+            <th data-priority="1">date</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for i in data %}
+        <tr>
+             <th>{{i.finished_goods.category.category_name}}</th>
+            <td>{{i.finished_goods.name}}</td>
+            <td>{{i.finished_goods.size}}</td>
+            <td>{{i.stock}}</td>
+            <td>{{i.date}}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+                    </div>
+                </div>
+            </div> <!-- end col -->
+        </div> <!-- end row -->
+
+    </div><!-- container -->
+
+</div> <!-- Page content Wrapper -->
+
+{% endblock %}

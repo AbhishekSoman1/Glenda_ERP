@@ -14,6 +14,10 @@ urlpatterns = [
     path('edit_user/<int:id>/', views.Edit_user, name='edit_user'),
     path('delete_user/<int:user_id>/', views.delete_user_view, name='delete_user'),
     # path('create_permission/<int:id>/', views.create_permission, name='create_permission'),
+    path('ajax/load-designations/', views.load_designations, name='load_designations'),
 
-
+<<<<<<< HEAD
 ]
+=======
+]
+>>>>>>> 32e2f455a93e22e81137be3d06d46cc8789a8e9d
