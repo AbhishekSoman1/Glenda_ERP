@@ -1,6 +1,6 @@
 from django import forms
 
-from production_app.models import water_Finished_goods_category, water_Finished_Goods, damaged_Goods
+from production_app.models import water_Finished_goods_category, water_Finished_Goods, damaged_Goods ,Damaged_good_category
 
 
 class water_category_Form(forms.ModelForm):
@@ -16,7 +16,7 @@ class water_category_Form(forms.ModelForm):
 class finishedwaterForm(forms.ModelForm):
     class Meta:
         model = water_Finished_Goods
-        fields = ['category' ,'name', 'size', 'image']
+        fields = ['category','name', 'size', 'image']
         widgets = {
             'category': forms.Select(attrs={'class': 'form-control'}),
             'name': forms.TextInput(attrs={'class': 'form-control'}),
@@ -39,15 +39,33 @@ class finishedwaterForm(forms.ModelForm):
 
         return cleaned_data
 
+class DamagedForm(forms.ModelForm):
+    class Meta:
+        model = Damaged_good_category
+        fields = ['category_name']
+        widgets = {
+            'category_name': forms.TextInput(attrs={'class': 'form-control'}),
+
+        }
 
 class damaged_goods_Form(forms.ModelForm):
     class Meta:
         model = damaged_Goods
-        fields = ['name', 'image', 'description']
+        fields = ['category','name', 'image', 'description']
         widgets = {
+            'category': forms.Select(attrs={'class': 'form-control'}),
             'name': forms.TextInput(attrs={'class': 'form-control'}),
-
             'image': forms.ClearableFileInput(attrs={'class': 'form-control'}),
             'description': forms.TextInput(attrs={'class': 'form-control'}),
         }
 
+class update_damaged_goods_Form(forms.ModelForm):
+    class Meta:
+        model = damaged_Goods
+        fields = ['category','name', 'image', 'description']
+        widgets = {
+            'category': forms.Select(attrs={'class': 'form-control'}),
+            'name': forms.TextInput(attrs={'class': 'form-control'}),
+            'image': forms.ClearableFileInput(attrs={'class': 'form-control'}),
+            'description': forms.TextInput(attrs={'class': 'form-control'}),
+        }

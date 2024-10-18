@@ -8,7 +8,7 @@ from django.contrib.auth import authenticate
 
 from django.contrib.auth import login,logout
 
-from register_app.models import CustomUser
+from register_app.models import CustomUser, designation
 
 
 def register_view(request):
@@ -153,3 +153,12 @@ def view_users(request):
 #         form = Permission_Form()
 #     return render(request, 'add_privilages.html', {'form': form,'menus':menus})
 
+<<<<<<< HEAD
+=======
+from django.http import JsonResponse
+
+def load_designations(request):
+    department_id = request.GET.get('department_id')
+    designations = designation.objects.filter(dept_id=department_id).values('id', 'user_type')  # Adjust field names as necessary
+    return JsonResponse(list(designations), safe=False)
+>>>>>>> 32e2f455a93e22e81137be3d06d46cc8789a8e9d

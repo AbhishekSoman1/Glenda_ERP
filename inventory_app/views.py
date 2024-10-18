@@ -1,9 +1,15 @@
 from django.shortcuts import render, get_object_or_404, redirect
 
 from Glenda_App.models import Menu
+<<<<<<< HEAD
 from inventory_app.forms import Raw_materials_StockForm, Finished_Goods_StockForm
 from inventory_app.models import RawMaterialsStock,Finished_Goods_Stock
 from production_app.models import water_Finished_Goods
+=======
+from inventory_app.forms import Raw_materials_StockForm, Finished_Goods_StockForm,Damaged_Goods_StockForm
+from inventory_app.models import RawMaterialsStock
+from production_app.models import water_Finished_Goods,damaged_Goods
+>>>>>>> 32e2f455a93e22e81137be3d06d46cc8789a8e9d
 from purchase_app.models import RawMaterials
 
 from django.db.models import Sum
@@ -93,6 +99,7 @@ def finishedgoods_stock_view(request):
 
     return render(request, 'inventory/view_finished_goods.html', {'view': finished_goods, 'menus': menus, 'total_stocks': total_stocks})
 
+<<<<<<< HEAD
 def finishedgoods_stock_history(request,id):
     menus = Menu.objects.prefetch_related('submenus').all()
     finished_good = Finished_Goods_Stock.objects.filter(finished_goods_id=id)
@@ -100,3 +107,43 @@ def finishedgoods_stock_history(request,id):
 
 
     return render(request,'inventory/view_finished_goods_history.html',{'data':finished_good,'menus': menus})
+=======
+def update_damaged_goods_stocks(request, id):
+    menus = Menu.objects.prefetch_related('submenus').all()
+    damaged_goods = get_object_or_404(damaged_Goods, id=id)
+
+    if request.method == 'POST':
+        form = Damaged_Goods_StockForm(request.POST)
+        if form.is_valid():
+            stock_entry = form.save(commit=False)
+            stock_entry.damaged = damaged_goods  # Set the raw material
+            stock_entry.save()  # Save the new stock entry
+
+            # Update the total stock for the raw material
+            total_stock = damaged_goods.stocks.aggregate(total=Sum('stock'))['total'] or 0
+            damaged_goods.total_stock = total_stock
+            damaged_goods.save()  # Save the updated total stock
+
+            return redirect('damagedgoods_stock_view')  # Redirect to the list view
+    else:
+        form = Damaged_Goods_StockForm()
+
+    return render(request, 'inventory/add_damage_stock.html', {
+        'form': form,
+        'menus': menus,
+        'damaged_goods': damaged_goods
+    })
+
+
+def damagedgoods_stock_view(request):
+    menus = Menu.objects.prefetch_related('submenus').all()
+    damaged_goods = damaged_Goods.objects.prefetch_related('stocks').all()
+
+    # Calculate total stock for each raw material
+    total_stocks = {
+        material.id: material.stocks.aggregate(total=Sum('stock'))['total'] or 0
+        for material in damaged_goods
+    }
+
+    return render(request, 'inventory/view_damaged_goods.html', {'view': damaged_goods, 'menus': menus, 'total_stocks': total_stocks})
+>>>>>>> 32e2f455a93e22e81137be3d06d46cc8789a8e9d
