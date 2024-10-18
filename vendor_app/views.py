@@ -6,6 +6,7 @@ from django.contrib import messages
 
 from register_app.models import CustomUser
 from vendor_app.forms import VendorRegisterForm
+from vendor_app.models import vendor_register
 
 
 # Create your views here.
@@ -17,7 +18,12 @@ def view_vendor_list(request):
 
     return render(request,'vendor/view_vendor_list.html',{'view':view,'menus':menus})
 
+def view_vendor_profile(request,id):
+    menus = Menu.objects.prefetch_related('submenus').all()
 
+    view=vendor_register.objects.get(user_id=id)
+
+    return render(request,'vendor/view_vendor_list.html',{'view':view,'menus':menus})
 
 def vender_register_view(request):
     # Fetching menus and their related submenus for display
@@ -43,7 +49,7 @@ def create_vendor_details(request,id):
             vendor.user_id = id  # Associate the user
             vendor.save()
             form.save_m2m()  # Save the many-to-many field for materials
-            return redirect('vender_list')  # Redirect to vendor list after successful submission
+            return redirect('view_vendor_list')  # Redirect to vendor list after successful submission
     else:
         form = VendorRegisterForm()
 
