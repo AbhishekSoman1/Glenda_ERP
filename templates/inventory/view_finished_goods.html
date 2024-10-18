@@ -41,6 +41,7 @@
                                     <th>Name</th>
                                     <th>Size</th>
                                     <th>Total Stock </th>
+                                    <th>Stock History </th>
                                   <th>Add Stock </th>
 
                                 </tr>
@@ -54,6 +55,15 @@
 
                                     <td>{{i.size}}</td>
                                   <td>{{i.total_stock}}</td>
+
+                                    <td>
+                                        <a href="{% url 'finishedgoods_stock_history' i.id %}">
+                                            <button type="button" class="btn btn-outline-info waves-effect waves-light">
+                                                <i class="mdi mdi-send mr-2"></i>History
+                                            </button>
+                                        </a>
+
+                                    </td>
 
                                     <td>
                                         <a href="{% url 'update_finished_goods_stocks' i.id %}" class="btn btn-sm btn-success"><i class="fas fa-edit"></i></a>
