@@ -2,7 +2,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 
 from Glenda_App.models import Menu
 from inventory_app.forms import Raw_materials_StockForm, Finished_Goods_StockForm
-from inventory_app.models import RawMaterialsStock
+from inventory_app.models import RawMaterialsStock,Finished_Goods_Stock
 from production_app.models import water_Finished_Goods
 from purchase_app.models import RawMaterials
 
@@ -92,3 +92,11 @@ def finishedgoods_stock_view(request):
     }
 
     return render(request, 'inventory/view_finished_goods.html', {'view': finished_goods, 'menus': menus, 'total_stocks': total_stocks})
+
+def finishedgoods_stock_history(request,id):
+    menus = Menu.objects.prefetch_related('submenus').all()
+    finished_good = Finished_Goods_Stock.objects.filter(finished_goods_id=id)
+    print(finished_good)
+
+
+    return render(request,'inventory/view_finished_goods_history.html',{'data':finished_good,'menus': menus})

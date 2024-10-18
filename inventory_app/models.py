@@ -20,5 +20,6 @@ class Finished_Goods_Stock(models.Model):
     stock = models.IntegerField(null=True)  # Stock quantity
     date = models.DateField(auto_now=True)
 
+
     def __str__(self):
         return f"{self.finished_goods.name} - {self.stock} units"

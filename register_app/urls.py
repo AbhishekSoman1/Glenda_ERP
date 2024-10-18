@@ -15,5 +15,4 @@ urlpatterns = [
     path('delete_user/<int:user_id>/', views.delete_user_view, name='delete_user'),
     # path('create_permission/<int:id>/', views.create_permission, name='create_permission'),
 
-
 ]
