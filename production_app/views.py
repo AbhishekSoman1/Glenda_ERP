@@ -89,10 +89,10 @@ def add_damaged_good_category(request):
 
             return redirect('add_category')
         else:
-            return render(request,'production/damaged_good_category.html',{'form':form, menus:'menus'})
+            return render(request,'production/damaged_good_category.html',{'form':form, 'menus':menus})
     else:
         form = DamagedForm(request.POST)
-        return render(request, 'production/damaged_good_category.html', {'form': form, menus: 'menus'})
+        return render(request, 'production/damaged_good_category.html', {'form': form,  'menus':menus})
 def damaged_goods(request):
     menus = Menu.objects.prefetch_related('submenus').all()
     dd=damaged_Goods.objects.all()
@@ -122,7 +122,7 @@ def damage_delete(request,id):
             return redirect('damaged_goods')
         except Exception as e:
             print(e)
-    return render(request,'production/damage_delete.html',{menus:'menus'})
+    return render(request,'production/damage_delete.html',{'menus':menus})
 
 def update_damage(request,id):
     menus = Menu.objects.prefetch_related('submenus').all()
@@ -136,4 +136,4 @@ def update_damage(request,id):
 
     else:
         form = update_damaged_goods_Form(instance=details)
-    return render(request,'production/update_damage.html',{details:'details',menus:'menus','form':form})
+    return render(request,'production/update_damage.html',{'menus':menus,'form':form})
