@@ -24,7 +24,8 @@ class VendorRegisterForm(forms.ModelForm):
             'vendor_PANNBR',
             'vendor_Street',
             'vendor_Landmark',
-            'materials'
+            'materials',
+            'vendor_Building'
         ]
 
         widgets = {
@@ -37,4 +38,6 @@ class VendorRegisterForm(forms.ModelForm):
             'vendor_PANNBR': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'PAN Number'}),
             'vendor_Street': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Street'}),
             'vendor_Landmark': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Landmark'}),
+            'vendor_Building': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Landmark'}),
+
         }
