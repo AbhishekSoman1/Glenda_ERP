@@ -25,9 +25,9 @@ class Finished_Goods_Stock(models.Model):
 
 
 class Damaged_Goods_Stock(models.Model):
-    edamaged = models.ForeignKey(damaged_Goods,on_delete=models.CASCADE,related_name='stocks')
+    damaged = models.ForeignKey(damaged_Goods,related_name='stocks',on_delete=models.CASCADE,null=True)
     stock = models.IntegerField(null=True)
     date = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f"{self.edamaged.name} - {self.stock} units"
+        return f"{self.damaged.name} - {self.stock} units"

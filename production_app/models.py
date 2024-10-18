@@ -29,3 +29,4 @@ class damaged_Goods(models.Model):
     name = models.CharField(max_length=150, null=True)
     image = models.ImageField(upload_to='images/',null=True)
     description = models.CharField(max_length=200,null=True)
+    total_stock = models.IntegerField(default=0)

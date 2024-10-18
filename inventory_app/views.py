@@ -98,10 +98,10 @@ def update_damaged_goods_stocks(request, id):
     damaged_goods = get_object_or_404(damaged_Goods, id=id)
 
     if request.method == 'POST':
-        form = Finished_Goods_StockForm(request.POST)
+        form = Damaged_Goods_StockForm(request.POST)
         if form.is_valid():
             stock_entry = form.save(commit=False)
-            stock_entry.damaged_goods = damaged_goods  # Set the raw material
+            stock_entry.damaged = damaged_goods  # Set the raw material
             stock_entry.save()  # Save the new stock entry
 
             # Update the total stock for the raw material
@@ -111,7 +111,7 @@ def update_damaged_goods_stocks(request, id):
 
             return redirect('damagedgoods_stock_view')  # Redirect to the list view
     else:
-        form = Finished_Goods_StockForm()
+        form = Damaged_Goods_StockForm()
 
     return render(request, 'inventory/add_damage_stock.html', {
         'form': form,
