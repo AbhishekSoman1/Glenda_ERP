@@ -15,7 +15,7 @@
                             <li class="breadcrumb-item active">User Registration</li>
                         </ol>
                     </div>
-                    <h4 class="page-title">User Registration</h4>
+                    <h4 class="page-title">Vendor Registration</h4>
                 </div>
             </div>
         </div>
@@ -25,10 +25,10 @@
             <div class="col-lg-6">
                 <div class="card">
                     <div class="card-body">
-                        <form action="{% url 'register_view' %}" method="post">
+                        <form action="{% url 'vender_register_view' %}" method="post">
                             {% csrf_token %}
                             {{ form.non_field_errors }}
-                            <div class="form-group">
+                              <div class="form-group">
                                 <label>Name</label>
                                 {{ form.name }}
                                 {% for error in form.name.errors %}
@@ -47,32 +47,6 @@
                                 <label>Phone Number</label>
                                 {{ form.phone_number }}
                                 {% for error in form.phone_number.errors %}
-                                    <span class="text-danger">{{ error }}</span>
-                                {% endfor %}
-                            </div>
-
-                            <div class="form-group">
-                                <label>Department</label>
-                                {{ form.department }}
-                                {% for error in form.department.errors %}
-                                    <span class="text-danger">{{ error }}</span>
-                                {% endfor %}
-                            </div>
-
-                            <div class="form-group">
-                                <label>Designation</label>
-                                <select id="id_designation" name="designation" class="form-control">
-                                    <option value="">Select a designation</option>
-                                </select>
-                                {% for error in form.designation.errors %}
-                                    <span class="text-danger">{{ error }}</span>
-                                {% endfor %}
-                            </div>
-
-                            <div class="form-group">
-                                <label>Joining Date</label>
-                                {{ form.joining_date }}
-                                {% for error in form.joining_date.errors %}
                                     <span class="text-danger">{{ error }}</span>
                                 {% endfor %}
                             </div>
