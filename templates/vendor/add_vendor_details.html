@@ -28,11 +28,17 @@
                         <form action="{% url 'vender_register_view' %}" method="post">
                             {% csrf_token %}
                             {{ form.non_field_errors }}
-
+                              <div class="form-group">
+                                <label>Address</label>
+                                {{ form.vendor_address }}
+                                {% for error in form.vendor_address.errors %}
+                                    <span class="text-danger">{{ error }}</span>
+                                {% endfor %}
+                            </div>
                             <div class="form-group">
-                                <label>Pin code</label>
-                                {{ form.vendor_pincode }}
-                                {% for error in form.vendor_pincode.errors %}
+                                <label>Phone</label>
+                                {{ form.vendor_phn }}
+                                {% for error in form.vendor_phn.errors %}
                                     <span class="text-danger">{{ error }}</span>
                                 {% endfor %}
                             </div>
@@ -60,20 +66,63 @@
                                     <span class="text-danger">{{ error }}</span>
                                 {% endfor %}
                             </div>
-
                             <div class="form-group">
+                                <label>Pin code</label>
+                                {{ form.vendor_pincode }}
+                                {% for error in form.vendor_pincode.errors %}
+                                    <span class="text-danger">{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                          <div class="form-group">
+                                <label>Pan </label>
+                                {{ form.pan_yes_or_no }}
+                                {% for error in form.pan_yes_or_no.errors %}
+                                    <span class="text-danger">{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                           <div class="form-group">
+                                <label>Pan Number</label>
+                                {{ form.vendor_PANNBR }}
+                                {% for error in form.vendor_PANNBR.errors %}
+                                    <span class="text-danger">{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                          <div class="form-group">
                                 <label>Street</label>
                                 {{ form.vendor_Street }}
                                 {% for error in form.vendor_Street.errors %}
                                     <span class="text-danger">{{ error }}</span>
                                 {% endfor %}
                             </div>
-                            <!-- Other form fields -->
-
+                           <div class="form-group">
+                                <label>Land Mark</label>
+                                {{ form.vendor_Landmark }}
+                                {% for error in form.vendor_Landmark.errors %}
+                                    <span class="text-danger">{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                           <div class="form-group">
+                                <label>Building Name</label>
+                                {{ form.vendor_Building }}
+                                {% for error in form.vendor_Building.errors %}
+                                    <span class="text-danger">{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                              <div class="form-group">
+                                <label>Building Name</label>
+                                {{ form.vendor_Building }}
+                                {% for error in form.materials.errors %}
+                                    <span class="text-danger">{{ error }}</span>
+                                {% endfor %}
+                            </div>
                             <div class="form-group mb-0">
                                 <div>
-                                    <button type="submit" class="btn btn-primary waves-effect waves-light">Submit</button>
-                                    <button type="reset" class="btn btn-secondary waves-effect m-l-5">Cancel</button>
+                                    <button type="submit" class="btn btn-primary waves-effect waves-light">
+                                        Submit
+                                    </button>
+                                    <button type="reset" class="btn btn-secondary waves-effect m-l-5">
+                                        Cancel
+                                    </button>
                                 </div>
                             </div>
                         </form>
@@ -84,41 +133,30 @@
     </div>
 </div>
 
-<!-- jQuery code to fetch location based on pincode -->
+<!-- AJAX Script -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-    $(document).ready(function() {
-        // Input field for pincode
-        $('#id_vendor_pincode').on('input', function() {
-            var pincode = $(this).val();
-
-            // Ensure the pincode is 6 digits long
-            if (pincode.length === 6) {
-                // Use India's Post Office API to fetch location details
+    $(document).ready(function () {
+        $('#id_department').change(function () {
+            var departmentId = $(this).val();
+            if (departmentId) {
                 $.ajax({
-                    url: 'https://api.postalpincode.in/pincode/' + pincode,
-                    method: 'GET',
-                    success: function(response) {
-                        if (response[0].Status === 'Success') {
-                            var postOffice = response[0].PostOffice[0];
-                            var district = postOffice.District;
-                            var state = postOffice.State;
-                            var street = postOffice.Name;
-                            var country = 'India'; // Set the Country field to a default value
-
-                            // Fill the form fields with the fetched data
-                            $('#id_vendor_district').val(district);
-                            $('#id_vendor_state').val(state);
-                            $('#id_vendor_Street').val(street);
-                            $('#id_vendor_country').val(country); // Update the Country field
-                        } else {
-                            alert('Invalid Pincode');
-                        }
+                    url: '{% url "load_designations" %}',  // Update with your URL
+                    data: {
+                        'department_id': departmentId
                     },
-                    error: function() {
-                        alert('Error fetching details. Please try again later.');
+                    success: function (data) {
+                        var designationSelect = $('#id_designation');
+                        designationSelect.empty();
+                        designationSelect.append('<option value="">Select a designation</option>');
+                        $.each(data, function (key, value) {
+                            designationSelect.append('<option value="' + value.id + '">' + value.user_type + '</option>');
+                        });
                     }
                 });
+            } else {
+                $('#id_designation').empty();
+                $('#id_designation').append('<option value="">Select a designation</option>');
             }
         });
     });
