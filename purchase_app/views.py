@@ -28,7 +28,7 @@ def add_category(request):
             form.save()
             messages.success(request, 'Successfull')
 
-            return redirect('add_category')
+            return redirect('view_rawmaterials')
     return render(request, 'purchase/Add_category.html', {'form': form, 'menus': menus})
 
 
