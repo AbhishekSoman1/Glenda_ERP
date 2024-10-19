@@ -17,3 +17,5 @@ urlpatterns = [
     path('ajax/load-designations/', views.load_designations, name='load_designations'),
 
 ]
+
+

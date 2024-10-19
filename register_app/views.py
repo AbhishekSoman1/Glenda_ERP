@@ -153,6 +153,7 @@ def view_users(request):
 #         form = Permission_Form()
 #     return render(request, 'add_privilages.html', {'form': form,'menus':menus})
 
+
 from django.http import JsonResponse
 
 def load_designations(request):

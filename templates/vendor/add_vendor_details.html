@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 {% extends 'base.html' %}
 {% load static %}
 
@@ -10,9 +11,9 @@
                 <div class="page-title-box">
                     <div class="btn-group float-right">
                         <ol class="breadcrumb hide-phone p-0 m-0">
-                            <li class="breadcrumb-item"><a href="#">Home</a></li>
-                            <li class="breadcrumb-item"><a href="#">Vendors</a></li>
-                            <li class="breadcrumb-item active">Vendor Details</li>
+                            <li class="breadcrumb-item"><a href="#"></a></li>
+                            <li class="breadcrumb-item"><a href="#"></a></li>
+                            <li class="breadcrumb-item active"></li>
                         </ol>
                     </div>
                     <h4 class="page-title">Vendor Details</h4>
@@ -21,13 +22,13 @@
         </div>
 
         <!-- Form Section -->
-<div class="row">
+       <div class="row">
     <div class="col-12">
         <div class="card">
             <div class="card-body">
                 <h4 class="mt-0 header-title">Vendor Details</h4>
                 <p class="text-muted mb-4 font-13">Please fill in the vendor details below.</p>
-                <form action="" method="post">
+                <form action="{% url 'vender_register_view' %}" method="post">
                     {% csrf_token %}
                     {{ form.non_field_errors }}
                     <div class="row">
@@ -207,7 +208,7 @@
         });
     });
 </script>
-        <script>
+<script>
     document.addEventListener('DOMContentLoaded', function () {
         const panYesNoField = document.getElementById('id_pan_yes_or_no');
         const vendorPANNBRField = document.getElementById('id_vendor_PANNBR');
@@ -230,3 +231,5 @@
     });
 </script>
 {% endblock %}
+=======
+>>>>>>> master
