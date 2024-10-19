@@ -1,3 +1,5 @@
+from datetime import timedelta
+
 from django.db import models
 from production_app.models import damaged_Goods
 from production_app.models import water_Finished_Goods
@@ -11,8 +13,7 @@ class RawMaterialsStock(models.Model):
     stock = models.IntegerField(null=True)  # Stock quantity
     date = models.DateField(auto_now=True)
 
-    def __str__(self):
-        return f"{self.raw_materials.name} - {self.stock} units"
+
 
 
 class Finished_Goods_Stock(models.Model):
