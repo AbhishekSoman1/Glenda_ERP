@@ -9,12 +9,16 @@
         <div class="row">
             <div class="col-sm-12">
                 <div class="page-title-box">
-                    <div class="btn-group float-right">
-                        <ol class="breadcrumb hide-phone p-0 m-0">
-                            <li class="breadcrumb-item"><a href="#">Zoogler</a></li>
-                            <li class="breadcrumb-item"><a href="#">Tables</a></li>
-                            <li class="breadcrumb-item active">Editable</li>
-                        </ol>
+                    <div class="btn-group float-right mb-3">
+                        <div class="btn-group mo-mb-2">
+                            <button type="button" class="btn btn-success btn-lg" fdprocessedid="gg5obj">Export as</button>
+                            <button type="button" class="btn btn-lg btn-success dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" fdprocessedid="jdvfec">
+                                <span class="sr-only">Toggle Dropdown</span>
+                            </button>
+                            <div class="dropdown-menu" x-placement="bottom-start" style="position: absolute; transform: translate3d(79px, 38px, 0px); top: 0px; left: 0px; will-change: transform;">
+                                <a class="dropdown-item" href="{% url 'export_vendor_list_csv' %}">Excel</a>
+                            </div>
+                        </div>
                     </div>
                     <h4 class="page-title">Vendor List</h4>
                 </div>
@@ -23,7 +27,7 @@
         <!-- end page title end breadcrumb -->
         <div class="row">
             <div class="col-12">
-                <div class="card">
+                <div class="card>
                     <div class="card-body">
 
                         <h4 class="mt-0 header-title"></h4>
@@ -34,7 +38,7 @@
                             <a href="{% url 'vender_register_view' %}" class="btn btn-primary">Add Vendor</a>
                         </div>
 
-                        <table class="table mb-0" id="my-table">
+                        <table class="table mt-5" id="my-table">
                             <thead>
                                 <tr>
                                     <th>Name</th>
@@ -52,10 +56,11 @@
                                     <td>{{ i.name }}</td>
                                     <td>{{ i.email }}</td>
                                     <td>{{ i.phone_number }}</td>
-                                    <td><a href="">
-                                            <button type="button" class="btn btn-outline-info waves-effect waves-light">
-                                                <i class="mdi mdi-send mr-2"></i>Profile
+                                    <td><a href="{% url 'view_vendor_profile' i.id %}">
+                                            <button type="button" class="btn btn-purple waves-effect waves-light">
+                                               <i class="mdi mdi-send mr-2"></i>Profile
                                             </button>
+
                                     </a></td>
                                     <td><a href="{% url 'create_vendor_details' i.id %}" class="btn btn-primary">Add Details</a></td>
                                     <td>

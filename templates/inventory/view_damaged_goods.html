@@ -23,9 +23,22 @@
         <!-- end page title end breadcrumb -->
         <div class="row">
             <div class="col-12">
+
                 <div class="card">
                     <div class="card-body">
-
+                        <div class="col text-left">
+                            <div class="search-bar">
+                                <form method="POST" action="{% url 'search' %}">
+                                {% csrf_token %}
+                                    <input type="text" name="search" placeholder="search">
+                                    <button type="submit" class="btn btn-gradient waves">
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                        <div class="col text-right">
+                            <a href="{% url 'generate_excel' %}"><button type="button" class="btn btn-success">Generate Excel</button></a>
+                        </div>
                         <h4 class="mt-0 header-title"></h4>
                         <p class="text-muted mb-4 font-13"></p>
 
@@ -40,8 +53,8 @@
                                     <th>Category</th>
                                     <th>Name</th>
                                     <th>Total Stock </th>
+                                    <th>Action</th>
                                   <th>Add Stock </th>
-
                                 </tr>
                             </thead>
                             <tbody>
@@ -51,7 +64,7 @@
                                   <td>{{i.category.category_name}}</td>
                                     <td>{{i.name}}</td>
                                     <td>{{i.total_stock}}</td>
-
+                                    <td><a href="{% url 'damaged_good_stock_history' i.id %}"><button type="button" class="btn btn-primary" data-bs-toggle="tooltip" data-bs-html="true" data-bs-title="<em>Tooltip</em> <u>with</u> <b>HTML</b>">History</button></a></td>
                                     <td>
                                         <a href="{% url 'update_damaged_goods_stocks' i.id %}" class="btn btn-sm btn-success"><i class="fas fa-edit"></i></a>
                                     </td>

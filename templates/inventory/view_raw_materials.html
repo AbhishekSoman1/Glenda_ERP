@@ -35,6 +35,7 @@
             <th>Size</th>
             <th>Color</th>
             <th>Total Stock</th>
+            <th>Stock History</th>
             <th>Add Stock</th>
         </tr>
     </thead>
@@ -47,6 +48,13 @@
             <td>{{ i.size }}</td>
             <td>{{ i.color }}</td>
             <td>{{ i.total_stock }}</td>  <!-- Display total stock -->
+            <td>
+                <a href="{% url 'raw_materials_stock_history' i.id %}">
+                    <button type="button" class="btn btn-purple waves-effect waves-light">
+                        <i class="mdi mdi-send mr-2"></i>History
+                    </button>
+                </a>
+            </td>
             <td>
                 <a href="{% url 'update_stocks' i.id %}" class="btn btn-sm btn-success"><i class="fas fa-edit"></i></a>
             </td>

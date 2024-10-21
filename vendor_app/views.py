@@ -1,3 +1,6 @@
+import csv
+
+from django.http import HttpResponse
 from django.shortcuts import render, redirect
 
 from Glenda_App.models import Menu
@@ -21,9 +24,9 @@ def view_vendor_list(request):
 def view_vendor_profile(request,id):
     menus = Menu.objects.prefetch_related('submenus').all()
 
-    view=vendor_register.objects.get(user_id=id)
+    view = vendor_register.objects.filter(user_id=id)
 
-    return render(request,'vendor/view_vendor_list.html',{'view':view,'menus':menus})
+    return render(request,'vendor/view_vendor_profile.html',{'view':view,'menus':menus})
 
 def vender_register_view(request):
     # Fetching menus and their related submenus for display
@@ -54,3 +57,41 @@ def create_vendor_details(request,id):
         form = VendorRegisterForm()
 
     return render(request, 'vendor/add_vendor_details.html', {'form': form, 'menus': menus})
+
+
+
+def vendor_details_pdf(request, id):
+    menus = Menu.objects.prefetch_related('submenus').all()
+    view = vendor_register.objects.filter(user_id=id).first()
+
+    context = {'view': view, 'menu': menus}
+    template = get_template('vendor/vendor_details_pdf.html')
+    html = template.render(context)
+
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = f'attachment; filename="vendor_profile_{view.user.name}.pdf"'
+
+    pdf_status = pisa.CreatePDF(
+        html,
+        dest=response
+    )
+    return response
+
+
+def vendor_list_csv(request):
+    menus = Menu.objects.prefetch_related('submenus').all()
+    view = CustomUser.objects.filter(is_staff=False)
+
+    context = {'view': view, 'menu': menus}
+    response = HttpResponse(content_type='application/csv')
+    response['Content-Disposition'] = f'attachment; filename="vendor_list.csv"'
+
+    writer = csv.writer(response)
+    writer.writerow(['Name', 'Email', 'Phone Number'])
+
+    vendors = CustomUser.objects.filter(is_staff=False)
+
+    for vendor in vendors:
+        writer.writerow([vendor.name, vendor.email, vendor.phone_number])
+
+    return response
