@@ -146,4 +146,4 @@ def damagedgoods_stock_view(request):
     }
 
     return render(request, 'inventory/view_damaged_goods.html', {'view': damaged_goods, 'menus': menus, 'total_stocks': total_stocks})
->>>>>>> 32e2f455a93e22e81137be3d06d46cc8789a8e9d
+
