@@ -1,11 +1,11 @@
 {% extends 'base.html' %}
-
 {% load static %}
-
 {% block content %}
 
 <div class="page-content-wrapper">
+
     <div class="container-fluid">
+
         <div class="row">
             <div class="col-sm-12">
                 <div class="page-title-box">
@@ -16,53 +16,52 @@
                             <li class="breadcrumb-item active">Editable</li>
                         </ol>
                     </div>
-                    <h4 class="page-title">Stock History</h4>
+                    <h4 class="page-title">Damaged Goods</h4>
                 </div>
             </div>
         </div>
+        <!-- end page title end breadcrumb -->
         <div class="row">
             <div class="col-12">
                 <div class="row">
                     <div class="col text-right">
-                        <!-- Replacing the Export to PDF button with a dropdown menu -->
-                        <div class="btn-group float-right">
-                            <div class="btn-group mo-mb-2">
-                                <button type="button" class="btn btn-success btn-lg" fdprocessedid="gg5obj">Export as</button>
-                                <button type="button" class="btn btn-lg btn-success dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" fdprocessedid="jdvfec">
-                                    <span class="sr-only">Toggle Dropdown</span>
-                                </button>
-                                <div class="dropdown-menu">
-                                    <a class="dropdown-item" href="{% url 'finishedgoods_stock_history_csv' id %}">Excel</a>
-                                    <a class="dropdown-item" href="{% url 'finishedgoods_stock_history_pdf' id %}">PDF</a>
-                                </div>
+                        <button type="button" class="btn btn-success btn-lg" fdprocessedid="gg5obj">Export as</button>
+                            <button type="button" class="btn btn-lg btn-success dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" fdprocessedid="jdvfec">
+                                <span class="sr-only">Toggle Dropdown</span>
+                            </button>
+                            <div class="dropdown-menu" x-placement="bottom-start" style="position: absolute; transform: translate3d(79px, 38px, 0px); top: 0px; left: 0px; will-change: transform;">
+                                <a class="dropdown-item" href="{% url 'generate_csv' id %}">Excel</a>
+                                <a class="dropdown-item" href="{% url 'generate_pdf' id %}">PDF </a>
                             </div>
-                        </div>
                     </div>
                 </div>
-                <div class="card mt-4" style="margin-top:20px">
+                <div class="card">
                     <div class="card-body">
+
                         <h4 class="mt-0 header-title"></h4>
                         <p class="text-muted mb-4 font-13"></p>
 
-                        <table class="table table-bordered table-hover" id="my-table">
+
+                        <div class="mb-3">
+                        </div>
+
+                        <table class="table mb-0" id="my-table">
                             <thead>
                                 <tr>
                                     <th>Category</th>
                                     <th data-priority="1">Name</th>
-                                    <th data-priority="3">Size</th>
+                                    <th data-priority="2">Description</th>
                                     <th data-priority="3">Stock</th>
-                                    <th data-priority="1">Date</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {% for i in data %}
-                                    <tr>
-                                        <th>{{ i.finished_goods.category.category_name }}</th>
-                                        <td>{{ i.finished_goods.name }}</td>
-                                        <td>{{ i.finished_goods.size }}</td>
-                                        <td>{{ i.stock }}</td>
-                                        <td>{{ i.date }}</td>
-                                    </tr>
+                                <tr>
+                                    <th>{{i.damaged.category}}</th>
+                                    <td>{{i.damaged.name}}</td>
+                                    <td>{{i.damaged.description}}</td>
+                                    <td>{{i.stock}}</td>
+                                </tr>
                                 {% endfor %}
                             </tbody>
                         </table>
@@ -76,7 +75,4 @@
 
 </div> <!-- Page content Wrapper -->
 
-
 {% endblock %}
-
-
