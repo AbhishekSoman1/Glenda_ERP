@@ -7,9 +7,38 @@ from purchase_app.forms import CategoryForm, RawMaterialForm
 from django.contrib import messages
 
 from purchase_app.models import RawMaterials, RawMaterialCategory
+from register_app.models import MenuPermissions
 
 
 # Create your views here.
+def manager_home(request):
+    user = request.user
+
+    # Get the user's primary key ID
+    user_id = user.id
+    # Debug: Print user info
+    print(user_id)
+    # Get the Menu_permisions instance for the current user
+    permissions = MenuPermissions.objects.filter(
+        user_id=user_id).first()  # Get the first permission instance for the user
+
+    # Debug: Print permissions
+
+    if permissions:
+        # Extract menu IDs from permissions
+        menu_ids = permissions.menu_details.values_list('id', flat=True)
+        # Filter menus based on permissions
+        menus = Menu.objects.filter(id__in=menu_ids).prefetch_related('submenus')
+    else:
+        # If no permissions are found, return an empty queryset
+        menus = Menu.objects.none()
+
+    # Debug: Print filtered menus
+    print(f"Filtered Menus: {menus}")
+    return render(request,'purchase/home/index.html',{'menus':menus})
+
+
+
 
 def view_rawmaterials(request):
     menus = Menu.objects.prefetch_related('submenus').all()

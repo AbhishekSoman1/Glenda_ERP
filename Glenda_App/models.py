@@ -1,5 +1,8 @@
 from django.db import models
 
+from register_app.models import CustomUser
+
+
 # Create your models here.
 
 
@@ -27,3 +30,12 @@ class SubMenu(models.Model):
         verbose_name = "SubMenu"
         verbose_name_plural = "SubMenus"
         ordering = ['title']  # Optional: orders the submenus by title
+
+class ChatMessage(models.Model):
+    sender = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    receiver = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='received_messages')
+    message = models.TextField()
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.sender.email} to {self.receiver.email}: {self.message[:20]}"
