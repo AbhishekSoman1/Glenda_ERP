@@ -1,15 +1,14 @@
 from django.shortcuts import render, get_object_or_404, redirect
 
 from Glenda_App.models import Menu
-<<<<<<< HEAD
+
 from inventory_app.forms import Raw_materials_StockForm, Finished_Goods_StockForm
 from inventory_app.models import RawMaterialsStock,Finished_Goods_Stock
 from production_app.models import water_Finished_Goods
-=======
+
 from inventory_app.forms import Raw_materials_StockForm, Finished_Goods_StockForm,Damaged_Goods_StockForm
 from inventory_app.models import RawMaterialsStock
 from production_app.models import water_Finished_Goods,damaged_Goods
->>>>>>> 32e2f455a93e22e81137be3d06d46cc8789a8e9d
 from purchase_app.models import RawMaterials
 
 from django.db.models import Sum
@@ -99,7 +98,7 @@ def finishedgoods_stock_view(request):
 
     return render(request, 'inventory/view_finished_goods.html', {'view': finished_goods, 'menus': menus, 'total_stocks': total_stocks})
 
-<<<<<<< HEAD
+
 def finishedgoods_stock_history(request,id):
     menus = Menu.objects.prefetch_related('submenus').all()
     finished_good = Finished_Goods_Stock.objects.filter(finished_goods_id=id)
@@ -107,7 +106,7 @@ def finishedgoods_stock_history(request,id):
 
 
     return render(request,'inventory/view_finished_goods_history.html',{'data':finished_good,'menus': menus})
-=======
+
 def update_damaged_goods_stocks(request, id):
     menus = Menu.objects.prefetch_related('submenus').all()
     damaged_goods = get_object_or_404(damaged_Goods, id=id)
