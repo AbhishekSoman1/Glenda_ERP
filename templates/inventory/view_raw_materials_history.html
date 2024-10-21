@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block content %}
+
+<div class="page-content-wrapper">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="page-title-box">
+                    <div class="btn-group float-right">
+                        <ol class="breadcrumb hide-phone p-0 m-0">
+                            <li class="breadcrumb-item"><a href="#">Zoogler</a></li>
+                            <li class="breadcrumb-item"><a href="#">Tables</a></li>
+                            <li class="breadcrumb-item active">Editable</li>
+                        </ol>
+                    </div>
+                    <h4 class="page-title">Stock History</h4>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <div class="row">
+                    <div class="col text-right">
+                        <!-- Replacing the Export to PDF button with a dropdown menu -->
+                        <div class="btn-group float-right">
+                            <div class="btn-group mo-mb-2">
+                                <button type="button" class="btn btn-success btn-lg" fdprocessedid="gg5obj">Export as</button>
+                                <button type="button" class="btn btn-lg btn-success dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" fdprocessedid="jdvfec">
+                                    <span class="sr-only">Toggle Dropdown</span>
+                                </button>
+                                <div class="dropdown-menu">
+                                    <a class="dropdown-item" href="#">Excel</a>
+                                    <a class="dropdown-item" href="{% url 'raw_materials_history_pdf' id%}">PDF</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card mt-4" style="margin-top:20px">
+                    <div class="card-body">
+                        <h4 class="mt-0 header-title"></h4>
+                        <p class="text-muted mb-4 font-13"></p>
+
+                        <table class="table table-bordered table-hover" id="my-table">
+                            <thead>
+                                <tr>
+                                    <th>Category</th>
+                                    <th data-priority="1">Name</th>
+                                    <th data-priority="3">Size</th>
+                                    <th data-priority="3">Stock</th>
+                                    <th data-priority="1">Date</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for i in data %}
+                                    <tr>
+                                        <th>{{ i.raw_materials.category.category_name }}</th>
+                                        <td>{{ i.raw_materials.name }}</td>
+                                        <td>{{ i.raw_materials.size }}</td>
+                                        <td>{{ i.stock }}</td>
+                                        <td>{{ i.date }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+
+                    </div>
+                </div>
+            </div> <!-- end col -->
+        </div> <!-- end row -->
+
+    </div><!-- container -->
+
+</div> <!-- Page content Wrapper -->
+
+
+{% endblock %}

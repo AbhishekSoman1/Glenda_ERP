@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<h2>Search Results</h2>
+
+{% if items %}
+    <h3>Results for "{{ request.POST.search }}"</h3>
+    <ul>
+        {% for item in items %}
+            <li>{{ item.damaged.category }} - {{ item.damaged.name }}: {{ item.stock }} units</li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>No items found.</p>
+{% endif %}
+{% endblock %}
