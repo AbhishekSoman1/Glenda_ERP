@@ -1,3 +1,4 @@
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render,redirect
 
 from Glenda_App.forms import MenuForm, SubMenuForm
@@ -9,10 +10,11 @@ from vendor_app.models import vendor_register
 from django.db.models import Sum
 from django.utils import timezone
 from datetime import timedelta
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 
-
+@login_required
 def index(request):
     # Fetch menus and counts
     menus = Menu.objects.prefetch_related('submenus').all()
@@ -181,3 +183,5 @@ def create_submenu(request):
 #         "finished_goods": finished_goods_data,
 #         "raw_materials": raw_materials_data,
 #     })
+
+

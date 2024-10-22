@@ -44,15 +44,20 @@
                     <img src="{% static 'assets/images/users/avatar-6.jpg' %}" alt="user" class="rounded-circle img-thumbnail mb-1">
                     <h6 class="">Admin</h6>
                     <p class=" online-icon text-dark"><i class="mdi mdi-record text-success"></i>online</p>
-                    <ul class="list-unstyled list-inline mb-0 mt-2">
-                        <li class="list-inline-item">
-                            <a href="#" class="" data-toggle="tooltip" data-placement="top" title="Profile"><i class="dripicons-user text-purple"></i></a>
-                        </li>
+                   <ul class="list-unstyled list-inline mb-0 mt-2">
+    <li class="list-inline-item">
+        <a href="#" class="" data-toggle="tooltip" data-placement="top" title="Profile">
+            <i class="dripicons-user text-purple"></i>
+        </a>
+    </li>
 
-                        <li class="list-inline-item">
-                            <a href="#" class="" data-toggle="tooltip" data-placement="top" title="Log out"><i class="dripicons-power text-danger"></i></a>
-                        </li>
-                    </ul>
+<!--    <li class="list-inline-item">-->
+<!--        &lt;!&ndash; Change button to input type="submit" &ndash;&gt;-->
+<!--         <button type="submit" class="" data-toggle="tooltip" data-placement="top">-->
+<!--             <i class="dripicons-power text-danger"></i></button>-->
+<!--    </li>-->
+</ul>
+
                 </div>
 
                 <div class="sidebar-inner slimscrollleft">
@@ -155,7 +160,7 @@
 <!--                            <li class="has_sub">-->
 <!--                                <a href="javascript:void(0);" class="waves-effect"><i class="dripicons-copy"></i><span> Pages </span> <span class="float-right"><i class="mdi mdi-chevron-right"></i></span></a>-->
 <!--                                <ul class="list-unstyled">-->
-<!--                                    <li><a href="pages-login.html">Login</a></li>-->
+<!--                                    <li><a href="login.html">Login</a></li>-->
 <!--                                    <li><a href="pages-register.html">Register</a></li>-->
 <!--                                    <li><a href="pages-recoverpw.html">Recover Password</a></li>-->
 <!--                                    <li><a href="pages-lock-screen.html">Lock Screen</a></li>-->
@@ -274,7 +279,10 @@
                                         </div>
                                         <a class="dropdown-item" href="#"><i class="mdi mdi-account-circle m-r-5 text-muted"></i> Profile</a>
                                         <div class="dropdown-divider"></div>
-                                        <a class="dropdown-item" href="#"><i class="mdi mdi-logout m-r-5 text-muted"></i> Logout</a>
+                                         <form method="post" action="{% url 'logout' %}">
+                                             {% csrf_token %}
+                                            <button type="submit" class="dropdown-item"><i class="mdi mdi-logout m-r-5 text-muted"></i> Logout</button>
+                                         </form>
                                     </div>
                                 </li>
                             </ul>

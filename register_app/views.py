@@ -1,5 +1,5 @@
 from Glenda_App.models import Menu
-from register_app.forms import CustomUserForm, CustomLoginForm, designation_Form, department_Form
+from register_app.forms import CustomUserForm, CustomLoginForm, designation_Form, department_Form, Permission_Form
 
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
@@ -68,36 +68,36 @@ def delete_user_view(request, user_id):
 
 
 
-def login_view(request):
-    if request.method == 'POST':
-        form = CustomLoginForm(request.POST)
-        if form.is_valid():
-            email = form.cleaned_data['email']
-            password = form.cleaned_data['password']
-            user = authenticate(request, email=email, password=password)
-            if user is not None:
-                login(request, user)
-                # Redirect based on user role
-                if user.is_superuser:
-                    return redirect('admin_home')  # Redirect to admin dashboard for superusers
-                department_name = user.department.dept_Name if user.department else None
-                designation_name = user.designation.user_type if user.designation else None
-
-                # Redirect based on department and designation
-                if designation_name == 'Executive' and department_name == 'Sales':
-                    return redirect('sales_home')
-                elif designation_name == 'Manager' and department_name == 'Sales':
-                    return redirect('vender_home')
-                elif designation_name == 'Assistant Manager' and department_name == 'Purchase':
-                    return redirect('assistant_manager_purchase_dashboard')
-                elif designation_name == 'Executive' and department_name == 'Logistics':
-                    return redirect('executive_logistics_dashboard')
-                else:
-                    return redirect('default_dashboard')  # Default page for other users
-    else:
-        form = CustomLoginForm()
-
-    return render(request, 'login.html', {'form': form})
+# def login_view(request):
+#     if request.method == 'POST':
+#         form = CustomLoginForm(request.POST)
+#         if form.is_valid():
+#             email = form.cleaned_data['email']
+#             password = form.cleaned_data['password']
+#             user = authenticate(request, email=email, password=password)
+#             if user is not None:
+#                 login(request, user)
+#                 # Redirect based on user role
+#                 if user.is_superuser:
+#                     return redirect('admin_home')  # Redirect to admin dashboard for superusers
+#                 department_name = user.department.dept_Name if user.department else None
+#                 designation_name = user.designation.user_type if user.designation else None
+#
+#                 # Redirect based on department and designation
+#                 if designation_name == 'Executive' and department_name == 'Sales':
+#                     return redirect('sales_home')
+#                 elif designation_name == 'Manager' and department_name == 'Sales':
+#                     return redirect('vender_home')
+#                 elif designation_name == 'Assistant Manager' and department_name == 'Purchase':
+#                     return redirect('manager_home')
+#                 elif designation_name == 'Executive' and department_name == 'Logistics':
+#                     return redirect('manager_home')
+#                 else:
+#                     return redirect('default_dashboard')  # Default page for other users
+#     else:
+#         form = CustomLoginForm()
+#
+#     return render(request, 'login.html', {'form': form})
 
 
 def logout_view(request):
@@ -138,20 +138,20 @@ def view_users(request):
     return render(request, 'register/view_users.html', {'view': view, 'menus': menus})
 
 
-# def create_permission(request,id):
-#     menus = Menu.objects.prefetch_related('submenus').all()
-#
-#     if request.method == 'POST':
-#         form = Permission_Form(request.POST)
-#         if form.is_valid():
-#             permission = form.save(commit=False)
-#             permission.user_id =id  # Associate the current user
-#             permission.save()
-#             form.save_m2m()  # Save many-to-many data for the form
-#             return redirect('view_users')  # Redirect to a success page or list view
-#     else:
-#         form = Permission_Form()
-#     return render(request, 'add_privilages.html', {'form': form,'menus':menus})
+def create_permission(request,id):
+    menus = Menu.objects.prefetch_related('submenus').all()
+
+    if request.method == 'POST':
+        form = Permission_Form(request.POST)
+        if form.is_valid():
+            permission = form.save(commit=False)
+            permission.user_id =id  # Associate the current user
+            permission.save()
+            form.save_m2m()  # Save many-to-many data for the form
+            return redirect('view_users')  # Redirect to a success page or list view
+    else:
+        form = Permission_Form()
+    return render(request, 'register/add_permissions.html', {'form': form,'menus':menus})
 
 
 from django.http import JsonResponse
@@ -160,3 +160,44 @@ def load_designations(request):
     department_id = request.GET.get('department_id')
     designations = designation.objects.filter(dept_id=department_id).values('id', 'user_type')  # Adjust field names as necessary
     return JsonResponse(list(designations), safe=False)
+
+
+def login_view(request):
+    if request.method == 'POST':
+        form = CustomLoginForm(request.POST)
+        if form.is_valid():
+            email = form.cleaned_data['email']
+            password = form.cleaned_data['password']
+            user = authenticate(request, email=email, password=password)
+            if user is not None:
+                login(request, user)
+                # Redirect based on user role
+                if user.is_superuser:
+                    return redirect('admin_home')  # Redirect to admin dashboard for superusers
+
+                department_name = user.department.dept_Name if user.department else None
+                designation_name = user.designation.user_type if user.designation else None
+
+                # Redirect based on department and designation
+                if designation_name == 'Executive' and department_name == 'Sales':
+                    return redirect('sales_home')
+                elif designation_name == 'Manager' and department_name == 'Sales':
+                    return redirect('vender_home')
+                elif designation_name == 'Assistant Manager' and department_name == 'Purchase':
+                    return redirect('manager_home')
+                elif designation_name == 'Executive' and department_name == 'Logistics':
+                    return redirect('executive_logistics_dashboard')
+                else:
+                    return redirect('default_dashboard')  # Default page for other users
+            else:
+                # Add an error to the form if authentication fails
+                form.add_error(None, "Invalid email or password.")
+    else:
+        form = CustomLoginForm()
+
+    return render(request, 'login.html', {'form': form})
+
+def logout_view(request):
+    logout(request)
+    # Redirect to a specific page after logout (e.g., home page)
+    return redirect(reverse('admin'))
