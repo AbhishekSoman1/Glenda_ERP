@@ -21,8 +21,9 @@ urlpatterns = [
     path('raw_materials_history_pdf/<int:id>', views.raw_materials_stock_pdf, name='raw_materials_history_pdf'),
     path('damagedgoods_stock_history/<int:id>',views.damagedgoods_stock_history,name='damaged_good_stock_history'),
     path('generate-pdf/<int:id>', views.generate_pdf, name='generate_pdf'),
+    path('generate_full_pdf',views.generate_full_pdf,name='generate_full_pdf'),
     path('generate_csv/<int:id>',views.generate_csv,name='generate_csv'),
     path('generate_excel',views.generate_excel,name='generate_excel'),
-    path('search',views.search,name='search')
+    path('damaged_search',views.damaged_search,name='damaged_search')
 ]
 
