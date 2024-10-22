@@ -37,26 +37,30 @@
                 <div class="topbar-left">
                     <div class="text-center bg-logo">
 <!--                        <a href="index.html" class="logo"><i class="mdi mdi-bowling text-success"></i> Glenda</a>-->
-                         <a href="index.html" class="logo"><img src="{% static 'assets/logo-5.png' %}" height="35" alt="logo"></a>
+                         <a href="{% url 'admin_home' %}" class="logo"><img src="{% static 'assets/logo-5.png' %}" height="35" alt="logo"></a>
                     </div>
                 </div>
                 <div class="sidebar-user">
-                    <img src="{% static 'assets/images/users/avatar-6.jpg' %}" alt="user" class="rounded-circle img-thumbnail mb-1">
-                    <h6 class="">Admin</h6>
+                {% if user.image %}
+                  <img src="{{ user.image.url }}" alt="user" class="rounded-circle img-thumbnail mb-1">
+                  {% else %}
+                     <img src="/path/to/default/image.jpg" alt="user" class="rounded-circle img-thumbnail mb-1">
+                    {% endif %}
+                    <h6 class="">{{ user.name }}</h6>
                     <p class=" online-icon text-dark"><i class="mdi mdi-record text-success"></i>online</p>
                    <ul class="list-unstyled list-inline mb-0 mt-2">
-    <li class="list-inline-item">
-        <a href="#" class="" data-toggle="tooltip" data-placement="top" title="Profile">
-            <i class="dripicons-user text-purple"></i>
-        </a>
-    </li>
+                        <li class="list-inline-item">
+                            <a href="#" class="" data-toggle="tooltip" data-placement="top" title="Profile">
+                                <i class="dripicons-user text-purple"></i>
+                            </a>
+                        </li>
 
 <!--    <li class="list-inline-item">-->
 <!--        &lt;!&ndash; Change button to input type="submit" &ndash;&gt;-->
 <!--         <button type="submit" class="" data-toggle="tooltip" data-placement="top">-->
 <!--             <i class="dripicons-power text-danger"></i></button>-->
 <!--    </li>-->
-</ul>
+                   </ul>
 
                 </div>
 
@@ -67,14 +71,15 @@
                             <li class="menu-title">Main</li>
 
                             <li>
-                                <a href="index.html" class="waves-effect">
+                                <a href="{% url 'admin_home' %}" class="waves-effect">
                                     <i class="dripicons-device-desktop"></i>
-                                    <span> Dashboard <span class="badge badge-pill badge-primary float-right">7</span></span>
+                                    <span> Dashboard <span class="badge badge-pill badge-primary float-right"></span></span>
                                 </a>
                             </li>
-                            <li>
-                                <a href="{% url 'calendar' %}" class="waves-effect"><i class="dripicons-to-do"></i><span> Calendar </span></a>
-                            </li>
+<!--                            <li>-->
+<!--                                <a href="{% url 'calendar' %}" class="waves-effect"><i class="dripicons-to-do"></i><span> Calendar </span></a>-->
+<!--                            </li>-->
+
 
 <!--                            <li class="menu-title">Components</li>-->
 {% for menu in menus %}
@@ -169,7 +174,12 @@
 <!--                                    <li><a href="pages-500.html">Error 500</a></li>-->
 <!--                                </ul>-->
 <!--                            </li>-->
-
+                            <li>
+                                <a href="{% url 'user_list' %}" class="waves-effect">
+                                    <i class="dripicons-device-desktop"></i>
+                                    <span> Chat <span class="badge badge-pill badge-primary float-right">7</span></span>
+                                </a>
+                            </li>
                         </ul>
                     </div>
                     <div class="clearfix"></div>
@@ -191,87 +201,86 @@
                             <ul class="list-inline float-right mb-0">
                                 <!-- language-->
 
-                                <li class="list-inline-item dropdown notification-list">
-                                    <a class="nav-link dropdown-toggle arrow-none waves-effect" data-toggle="dropdown" href="#" role="button"
-                                       aria-haspopup="false" aria-expanded="false">
-                                        <i class="dripicons-mail noti-icon"></i>
-                                        <span class="badge badge-danger noti-icon-badge">5</span>
-                                    </a>
-                                    <div class="dropdown-menu dropdown-menu-right dropdown-arrow dropdown-menu-lg">
-                                        <!-- item-->
-                                        <div class="dropdown-item noti-title">
-                                            <h5><span class="badge badge-danger float-right">745</span>Messages</h5>
-                                        </div>
+<!--                                <li class="list-inline-item dropdown notification-list">-->
+<!--                                    <a class="nav-link dropdown-toggle arrow-none waves-effect" data-toggle="dropdown" href="#" role="button"-->
+<!--                                       aria-haspopup="false" aria-expanded="false">-->
+<!--                                        <i class="dripicons-mail noti-icon"></i>-->
+<!--                                        <span class="badge badge-danger noti-icon-badge">5</span>-->
+<!--                                    </a>-->
+<!--                                    <div class="dropdown-menu dropdown-menu-right dropdown-arrow dropdown-menu-lg">-->
+<!--                                        &lt;!&ndash; item&ndash;&gt;-->
+<!--&lt;!&ndash;                                        <div class="dropdown-item noti-title">&ndash;&gt;-->
+<!--&lt;!&ndash;                                            <h5><span class="badge badge-danger float-right">745</span>Messages</h5>&ndash;&gt;-->
+<!--&lt;!&ndash;                                        </div>&ndash;&gt;-->
 
-                                        <!-- item-->
-                                        <a href="javascript:void(0);" class="dropdown-item notify-item">
-                                            <div class="notify-icon"><img src="{% static 'assets/images/users/avatar-2.jpg' %}" alt="user-img" class="img-fluid rounded-circle" /> </div>
-                                            <p class="notify-details"><b>Charles M. Jones</b><small class="text-muted">Dummy text of the printing and typesetting industry.</small></p>
-                                        </a>
+<!--                                        &lt;!&ndash; item&ndash;&gt;-->
+<!--&lt;!&ndash;                                        <a href="" class="dropdown-item notify-item">&ndash;&gt;-->
+<!--&lt;!&ndash;                                            <div class="notify-icon"><img src="{% static 'assets/images/users/avatar-2.jpg' %}" alt="user-img" class="img-fluid rounded-circle" /> </div>&ndash;&gt;-->
+<!--&lt;!&ndash;                                            <p class="notify-details"><b>{{ user.name }}</b></p>&ndash;&gt;-->
+<!--&lt;!&ndash;                                        </a>&ndash;&gt;-->
+<!--                                        &lt;!&ndash; item&ndash;&gt;-->
 
-                                        <!-- item-->
-                                        <a href="javascript:void(0);" class="dropdown-item notify-item">
-                                            <div class="notify-icon"><img src="{% static 'assets/images/users/avatar-3.jpg' %}" alt="user-img" class="img-fluid rounded-circle" /> </div>
-                                            <p class="notify-details"><b>Thomas J. Mimms</b><small class="text-muted">You have 87 unread messages</small></p>
-                                        </a>
 
-                                        <!-- item-->
-                                        <a href="javascript:void(0);" class="dropdown-item notify-item">
-                                            <div class="notify-icon"><img src="{% static 'assets/images/users/avatar-4.jpg' %}" alt="user-img" class="img-fluid rounded-circle" /> </div>
-                                            <p class="notify-details"><b>Luis M. Konrad</b><small class="text-muted">It is a long established fact that a reader will</small></p>
-                                        </a>
+<!--                                        &lt;!&ndash; item&ndash;&gt;-->
 
-                                        <!-- All-->
-                                        <a href="javascript:void(0);" class="dropdown-item notify-item border-top">
-                                            View All
-                                        </a>
 
-                                    </div>
-                                </li>
+<!--                                        &lt;!&ndash; All&ndash;&gt;-->
 
-                                <li class="list-inline-item dropdown notification-list">
-                                    <a class="nav-link dropdown-toggle arrow-none waves-effect" data-toggle="dropdown" href="#" role="button"
-                                       aria-haspopup="false" aria-expanded="false">
-                                        <i class="dripicons-bell noti-icon"></i>
-                                        <span class="badge badge-success noti-icon-badge">2</span>
-                                    </a>
-                                    <div class="dropdown-menu dropdown-menu-right dropdown-arrow dropdown-menu-lg">
-                                        <!-- item-->
-                                        <div class="dropdown-item noti-title">
-                                            <h5><span class="badge badge-danger float-right">87</span>Notification</h5>
-                                        </div>
 
-                                        <!-- item-->
-                                        <a href="javascript:void(0);" class="dropdown-item notify-item">
-                                            <div class="notify-icon bg-primary"><i class="mdi mdi-cart-outline"></i></div>
-                                            <p class="notify-details"><b>Your order is placed</b><small class="text-muted">Dummy text of the printing and typesetting industry.</small></p>
-                                        </a>
+<!--                                    </div>-->
+<!--                                </li>-->
 
-                                        <!-- item-->
-                                        <a href="javascript:void(0);" class="dropdown-item notify-item">
-                                            <div class="notify-icon bg-success"><i class="mdi mdi-message"></i></div>
-                                            <p class="notify-details"><b>New Message received</b><small class="text-muted">You have 87 unread messages</small></p>
-                                        </a>
+<!--                                <li class="list-inline-item dropdown notification-list">-->
+<!--                                    <a class="nav-link dropdown-toggle arrow-none waves-effect" data-toggle="dropdown" href="#" role="button"-->
+<!--                                       aria-haspopup="false" aria-expanded="false">-->
+<!--                                        <i class="dripicons-bell noti-icon"></i>-->
+<!--                                        <span class="badge badge-success noti-icon-badge">2</span>-->
+<!--                                    </a>-->
+<!--                                    <div class="dropdown-menu dropdown-menu-right dropdown-arrow dropdown-menu-lg">-->
+<!--                                        &lt;!&ndash; item&ndash;&gt;-->
+<!--                                        <div class="dropdown-item noti-title">-->
+<!--                                            <h5><span class="badge badge-danger float-right">87</span>Notification</h5>-->
+<!--                                        </div>-->
 
-                                        <!-- item-->
-                                        <a href="javascript:void(0);" class="dropdown-item notify-item">
-                                            <div class="notify-icon bg-warning"><i class="mdi mdi-glass-cocktail"></i></div>
-                                            <p class="notify-details"><b>Your item is shipped</b><small class="text-muted">It is a long established fact that a reader will</small></p>
-                                        </a>
+<!--                                        &lt;!&ndash; item&ndash;&gt;-->
+<!--                                        <a href="javascript:void(0);" class="dropdown-item notify-item">-->
+<!--                                            <div class="notify-icon bg-primary"><i class="mdi mdi-cart-outline"></i></div>-->
+<!--                                            <p class="notify-details"><b>Your order is placed</b><small class="text-muted">Dummy text of the printing and typesetting industry.</small></p>-->
+<!--                                        </a>-->
 
-                                        <!-- All-->
-                                        <a href="javascript:void(0);" class="dropdown-item notify-item border-top">
-                                            View All
-                                        </a>
+<!--                                        &lt;!&ndash; item&ndash;&gt;-->
+<!--                                        <a href="javascript:void(0);" class="dropdown-item notify-item">-->
+<!--                                            <div class="notify-icon bg-success"><i class="mdi mdi-message"></i></div>-->
+<!--                                            <p class="notify-details"><b>New Message received</b><small class="text-muted">You have 87 unread messages</small></p>-->
+<!--                                        </a>-->
 
-                                    </div>
-                                </li>
+<!--                                        &lt;!&ndash; item&ndash;&gt;-->
+<!--                                        <a href="javascript:void(0);" class="dropdown-item notify-item">-->
+<!--                                            <div class="notify-icon bg-warning"><i class="mdi mdi-glass-cocktail"></i></div>-->
+<!--                                            <p class="notify-details"><b>Your item is shipped</b><small class="text-muted">It is a long established fact that a reader will</small></p>-->
+<!--                                        </a>-->
+
+<!--                                        &lt;!&ndash; All&ndash;&gt;-->
+<!--                                        <a href="javascript:void(0);" class="dropdown-item notify-item border-top">-->
+<!--                                            View All-->
+<!--                                        </a>-->
+
+<!--                                    </div>-->
+<!--                                </li>-->
 
                                 <li class="list-inline-item dropdown notification-list">
+                                                    {% if user.image %}
+
                                     <a class="nav-link dropdown-toggle arrow-none waves-effect nav-user" data-toggle="dropdown" href="#" role="button"
                                        aria-haspopup="false" aria-expanded="false">
-                                        <img src="{% static 'assets/images/users/avatar-6.jpg' %}" alt="user" class="rounded-circle">
+                                        <img src="{{user.image.url}}" alt="user" class="rounded-circle">
                                     </a>
+                                    {% else %}
+                                    <a class="nav-link dropdown-toggle arrow-none waves-effect nav-user" data-toggle="dropdown" href="#" role="button"
+                                       aria-haspopup="false" aria-expanded="false">
+                                        <img src="" alt="user" class="rounded-circle">
+                                    </a>
+                                                         {% endif %}
                                     <div class="dropdown-menu dropdown-menu-right profile-dropdown ">
                                         <!-- item-->
                                         <div class="dropdown-item noti-title">
