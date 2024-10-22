@@ -1,21 +1,28 @@
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render,redirect
+from django.shortcuts import render, redirect, get_object_or_404
 
 from Glenda_App.forms import MenuForm, SubMenuForm
-from Glenda_App.models import Menu
+from Glenda_App.models import Menu, Message, Event
 from inventory_app.models import Finished_Goods_Stock, RawMaterialsStock
 from production_app.models import water_Finished_Goods, damaged_Goods
 from purchase_app.models import RawMaterials
+from register_app.models import CustomUser
 from vendor_app.models import vendor_register
 from django.db.models import Sum
 from django.utils import timezone
 from datetime import timedelta
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.csrf import csrf_exempt
+import json
+from django.db.models import Q  # Import Q here
 
 # Create your views here.
 
 @login_required
 def index(request):
+    users = CustomUser.objects.filter(is_staff=True)
+
+
     # Fetch menus and counts
     menus = Menu.objects.prefetch_related('submenus').all()
     vendor=vendor_register.objects.all()
@@ -53,6 +60,7 @@ def index(request):
     # Prepare the context for rendering
     context = {
         'menus': menus,
+        'users':users,
         'vendor': vendor_count,
         'goods': goods,
         'da': da,
@@ -88,7 +96,7 @@ def create_menu(request):
         form = MenuForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('index')  # Change to redirect to index after creation
+            return redirect('admin_home')  # Change to redirect to index after creation
     else:
         form = MenuForm()
     return render(request, 'create_menu.html', {'form': form})
@@ -98,7 +106,7 @@ def create_submenu(request):
         form = SubMenuForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('index')  # Change to redirect to index after creation
+            return redirect('admin_home')  # Change to redirect to index after creation
     else:
         form = SubMenuForm()
     return render(request, 'create_submenu.html', {'form': form})
@@ -184,4 +192,53 @@ def create_submenu(request):
 #         "raw_materials": raw_materials_data,
 #     })
 
+
+@login_required
+def user_list(request):
+    menus = Menu.objects.prefetch_related('submenus').all()
+    users = CustomUser.objects.filter(is_staff=True, is_superuser=False).exclude(id=request.user.id)
+    return render(request, 'chat/user_list.html', {'users': users,'menus':menus})
+
+# View to display chat with a specific user
+@login_required
+def chat_with_user(request, user_id):
+    menus = Menu.objects.prefetch_related('submenus').all()
+
+    user_to_chat = get_object_or_404(CustomUser, id=user_id)
+
+    # Fetching messages between the logged-in user and the selected user
+    messages = Message.objects.filter(
+        (Q(sender=request.user) & Q(receiver=user_to_chat)) |
+        (Q(sender=user_to_chat) & Q(receiver=request.user))
+    ).order_by('timestamp')  # Fetching messages between users
+
+    return render(request, 'chat/chat.html', {
+        'user': user_to_chat,'menus':menus,
+        'messages': messages  # Pass messages to the template
+    })
+
+# Function to send a message via POST request (API endpoint)
+@csrf_exempt  # Only use this for testing. Implement CSRF protection properly in production.
+def send_message(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        message_content = data.get('message')
+        user_id = data.get('user_id')
+
+        # Create and save the message
+        receiver = get_object_or_404(CustomUser, id=user_id)
+        message = Message.objects.create(
+            sender=request.user,
+            receiver=receiver,
+            content=message_content
+        )
+
+        return JsonResponse({
+            'status': 'success',
+            'message': 'Message sent',
+            'message_id': message.id,
+            'timestamp': message.timestamp.strftime('%Y-%m-%d %H:%M:%S')  # Include the formatted timestamp
+        })
+
+    return JsonResponse({'status': 'error', 'message': 'Invalid request'}, status=400)
 

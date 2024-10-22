@@ -7,6 +7,7 @@ from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, Permis
 # Create your models here.
 class department(models.Model):
     USER_TYPE_CHOICES = (
+        ('Admin', 'Admin'),
         ('Sales', 'Sales'),
         ('Purchase', 'Purchase'),
         ('Product', 'Product'),
@@ -23,7 +24,7 @@ class department(models.Model):
 
 class designation(models.Model):
     USER_TYPE_CHOICES = (
-        ('CEO', 'CEO'),
+        ('chief ', 'CEO'),
         ('Manager', 'Manager'),
         ('Assistant Manager', 'Assistant Manager'),
         ('Executive', 'Executive'),
@@ -63,7 +64,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)  # Admin status
     is_superuser = models.BooleanField(default=False)  # Superuser status
-
+    image = models.ImageField(upload_to='profile_photos/', null=True, blank=True)  # New profile photo field
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
 
