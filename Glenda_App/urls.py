@@ -6,7 +6,7 @@ from Glenda_App import views
 from Glenda_App.views import raw_materials_data
 
 urlpatterns = [
-    path('',views.index,name='index'),
+    path('admin_home',views.index,name='admin_home'),
     path('create_menu', views.create_menu, name='create_menu'),
     path('create_submenu', views.create_submenu, name='create_submenu'),
     path('calendar', views.calendar, name='calendar'),

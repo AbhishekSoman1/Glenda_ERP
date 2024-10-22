@@ -2,7 +2,7 @@ from Glenda_App.models import Menu
 from django.contrib.auth.forms import UserCreationForm
 from django import forms
 
-from register_app.models import department, designation, CustomUser
+from register_app.models import department, designation, MenuPermissions
 
 
 class department_Form(forms.ModelForm):
@@ -87,17 +87,46 @@ class CustomUserForm(UserCreationForm):
         })
     )
 
+
 class CustomLoginForm(forms.Form):
-    email = forms.EmailField(widget=forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'Email'}))
-    password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Password'}))
+    email = forms.EmailField(
+        widget=forms.EmailInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Email'
+        }),
+        error_messages={
+            'required': 'Please enter your email address.',
+            'invalid': 'Enter a valid email address.'
+        }
+    )
+
+    password = forms.CharField(
+        widget=forms.PasswordInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Password'
+        }),
+        error_messages={
+            'required': 'Please enter your password.'
+        }
+    )
+
+    def clean(self):
+        cleaned_data = super().clean()
+        email = cleaned_data.get("email")
+        password = cleaned_data.get("password")
+
+        # You can add any additional validation here if needed
+        # For example, checking if email is in a specific domain
+
+        return cleaned_data
 
 
 
-# class Permission_Form(forms.ModelForm):
-#     menu_details = forms.ModelMultipleChoiceField(
-#         queryset=Menu.objects.all(),
-#         widget=forms.CheckboxSelectMultiple
-#     )
-#     class Meta:
-#         model = Menu_permisions
-#         fields = ['menu_details',]
+class Permission_Form(forms.ModelForm):
+    menu_details = forms.ModelMultipleChoiceField(
+        queryset=Menu.objects.all(),
+        widget=forms.CheckboxSelectMultiple
+    )
+    class Meta:
+        model = MenuPermissions
+        fields = ['menu_details',]

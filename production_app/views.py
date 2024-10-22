@@ -3,7 +3,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from Glenda_App.models import Menu
 from production_app.forms import water_category_Form, finishedwaterForm, damaged_goods_Form,DamagedForm,update_damaged_goods_Form
 from django.contrib import messages
-
+from django.db.models import Q
 from production_app.models import water_Finished_goods_category, water_Finished_Goods, damaged_Goods,Damaged_good_category
 
 
@@ -137,3 +137,40 @@ def update_damage(request,id):
     else:
         form = update_damaged_goods_Form(instance=details)
     return render(request,'production/update_damage.html',{'menus':menus,'form':form})
+
+def search(request):
+    # Fetch all categories
+    categories = Damaged_good_category.objects.all()
+
+    # Initialize the queryset for damaged goods
+    damaged_goods_list = damaged_Goods.objects.all()
+    menus = Menu.objects.prefetch_related('submenus').all()
+
+    # Handle search requests
+    if request.method == 'GET':
+        damaged_name = request.GET.get('name', None)
+        damaged_category = request.GET.get('category', None)
+
+        # Build filters
+        filters = Q()
+
+        # If the search name is provided, filter by the name in damaged_Goods
+        if damaged_name:
+            filters &= Q(name__icontains=damaged_name)
+
+        # If a valid category is selected, filter by the category
+        if damaged_category:
+            filters &= Q(category_id=damaged_category)  # Use category_id to filter
+
+        # Apply the filters to the queryset if filters are provided
+        if filters:
+            damaged_goods_list = damaged_Goods.objects.filter(filters)
+
+    # Prepare context with the filtered or full list of damaged goods
+    context = {
+        'dd': damaged_goods_list,  # This is the queryset for the table in the HTML
+        'categories': categories,
+        'menus':menus
+    }
+
+    return render(request, 'production/damaged_goods.html', context)
