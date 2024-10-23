@@ -26,26 +26,52 @@
 
                 <div class="card">
                     <div class="card-body">
-                        <div class="col text-left">
-                            <div class="search-bar">
-                                <form method="POST" action="{% url 'search' %}">
-                                {% csrf_token %}
-                                    <input type="text" name="search" placeholder="search">
-                                    <button type="submit" class="btn btn-gradient waves">
+                       <form method="GET" action="{% url 'damaged_search' %}">
+                            <div class="row mb-4 align-items-end">
+                                <div class="col-md-4">
+                                    <!-- Category Dropdown Search -->
+                                    <div class="input-group">
+                                        <label for="category-search" class="sr-only">Search by Category</label>
+                                        <select class="form-control" id="category-search" name="category">
+                                            <option value="" selected>Search by Category</option>
+                                            {% for category in categories %}
+                                            <option value="{{ category.id }}">{{ category.category_name }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <!-- Name Search Bar -->
+                                    <div class="input-group">
+                                        <label for="name-search" class="sr-only">Search by Name</label>
+                                        <input type="text" class="form-control" id="name-search" name="name" placeholder="Search by Name">
+                                    </div>
+                                </div>
+
+                                <div class="col-md-2">
+                                    <!-- Single Search Button -->
+                                    <button class="btn btn-primary" type="submit" id="search-btn">
+                                        <i class="fas fa-search"></i>
                                     </button>
-                                </form>
+                                </div>
+
+                                <div class="col-md-2 text-right">
+                                    <div class="btn-group float-right">
+                                        <div class="btn-group mo-mb-2">
+                                            <button type="button" class="btn btn-success btn-lg" fdprocessedid="gg5obj">Export as</button>
+                                            <button type="button" class="btn btn-lg btn-success dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" fdprocessedid="jdvfec">
+                                                <span class="sr-only">Toggle Dropdown</span>
+                                            </button>
+                                            <div class="dropdown-menu">
+                                                <a class="dropdown-item" href="{% url 'generate_excel' %}">Excel</a>
+                                                <a class="dropdown-item" href="{% url 'generate_full_pdf' %}">PDF</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                        <div class="col text-right">
-                            <a href="{% url 'generate_excel' %}"><button type="button" class="btn btn-success">Generate Excel</button></a>
-                        </div>
-                        <h4 class="mt-0 header-title"></h4>
-                        <p class="text-muted mb-4 font-13"></p>
-
-
-                        <div class="mb-3">
-                        </div>
-
+                       </form>
                         <table class="table mb-0" id="my-table">
                             <thead>
                                 <tr>

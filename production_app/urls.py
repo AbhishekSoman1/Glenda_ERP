@@ -16,6 +16,7 @@ urlpatterns = [
     path('damaged_goods', views.damaged_goods, name='damaged_goods'),
     path('add_damaged_good_category',views.add_damaged_good_category, name='add_damaged_good_category'),
     path('damage_delete/<int:id>',views.damage_delete, name='damage_delete'),
-    path('update_damage/<int:id>',views.update_damage, name='update_damage')
+    path('update_damage/<int:id>',views.update_damage, name='update_damage'),
+    path('search',views.search,name='search')
 
 ]
