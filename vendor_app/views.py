@@ -2,6 +2,8 @@ import csv
 
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
+from django.template.loader import get_template
+from xhtml2pdf import pisa
 
 from Glenda_App.models import Menu
 from register_app.forms import CustomUserForm
