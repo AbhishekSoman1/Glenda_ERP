@@ -2,9 +2,12 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 
+
+
 # Create your models here.
 class department(models.Model):
     USER_TYPE_CHOICES = (
+        ('Admin', 'Admin'),
         ('Sales', 'Sales'),
         ('Purchase', 'Purchase'),
         ('Product', 'Product'),
@@ -21,7 +24,7 @@ class department(models.Model):
 
 class designation(models.Model):
     USER_TYPE_CHOICES = (
-        ('CEO', 'CEO'),
+        ('chief ', 'CEO'),
         ('Manager', 'Manager'),
         ('Assistant Manager', 'Assistant Manager'),
         ('Executive', 'Executive'),
@@ -61,7 +64,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)  # Admin status
     is_superuser = models.BooleanField(default=False)  # Superuser status
-
+    image = models.ImageField(upload_to='profile_photos/', null=True, blank=True)  # New profile photo field
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
 
@@ -70,10 +73,16 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     def _str_(self):
         return self.email
 
-#
-# class Menu_permisions(models.Model):
-#     menu_details = models.ManyToManyField('Glanda_App.Menu')  # ManyToManyField for menus
-#     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, null=True)  # ForeignKey to CustomUser
-#
-#     def _str_(self):
-#         return ', '.join([menu.name for menu in self.menu_details.all()]) if self.menu_details.exists() else 'No Menu'
+
+from django.db import models
+
+class MenuPermissions(models.Model):
+    user = models.ForeignKey('register_app.CustomUser', on_delete=models.CASCADE, null=True)  # Use the correct app name
+    menu_details = models.ManyToManyField('Glenda_App.Menu', related_name='permissions')  # Use the correct app name
+
+    def __str__(self):
+        return ', '.join([menu.title for menu in self.menu_details.all()]) if self.menu_details.exists() else 'No Menu'
+
+    class Meta:
+        verbose_name = "Menu Permission"
+        verbose_name_plural = "Menu Permissions"

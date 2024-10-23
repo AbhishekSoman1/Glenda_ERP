@@ -1,6 +1,6 @@
 from Glenda_App.models import Menu
-from register_app.forms import CustomUserForm, CustomLoginForm, designation_Form, department_Form
-
+from register_app.forms import CustomUserForm, CustomLoginForm, designation_Form, department_Form, Permission_Form
+from django.db.models import Q
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from django.contrib import messages
@@ -8,7 +8,35 @@ from django.contrib.auth import authenticate
 
 from django.contrib.auth import login,logout
 
-from register_app.models import CustomUser, designation
+from register_app.models import CustomUser, designation, MenuPermissions
+
+
+def staff_home(request):
+    user = request.user
+
+    # Get the user's primary key ID
+    user_id = user.id
+    # Debug: Print user info
+    print(user_id)
+    # Get the Menu_permisions instance for the current user
+    permissions = MenuPermissions.objects.filter(
+        user_id=user_id).first()  # Get the first permission instance for the user
+
+    # Debug: Print permissions
+
+    if permissions:
+        # Extract menu IDs from permissions
+        menu_ids = permissions.menu_details.values_list('id', flat=True)
+        # Filter menus based on permissions
+        menus = Menu.objects.filter(id__in=menu_ids).prefetch_related('submenus')
+    else:
+        # If no permissions are found, return an empty queryset
+        menus = Menu.objects.none()
+
+    # Debug: Print filtered menus
+    print(f"Filtered Menus: {menus}")
+    return render(request,'register/home/index.html',{'menus':menus})
+
 
 
 def register_view(request):
@@ -16,7 +44,7 @@ def register_view(request):
     menus = Menu.objects.prefetch_related('submenus').all()
 
     if request.method == 'POST':
-        form = CustomUserForm(request.POST)
+        form = CustomUserForm(request.POST,request.FILES)
         if form.is_valid():
             user = form.save(commit=False)
             user.is_staff = True  # Set is_staff to True
@@ -40,7 +68,7 @@ def Edit_user(request, id):
     user = get_object_or_404(CustomUser, id=id)
 
     if request.method == 'POST':
-        form = CustomUserForm(request.POST, instance=user)
+        form = CustomUserForm(request.POST,request.FILES,instance=user)
         if form.is_valid():
             form.save()
             messages.success(request, "User updated successfully!")
@@ -68,36 +96,36 @@ def delete_user_view(request, user_id):
 
 
 
-def login_view(request):
-    if request.method == 'POST':
-        form = CustomLoginForm(request.POST)
-        if form.is_valid():
-            email = form.cleaned_data['email']
-            password = form.cleaned_data['password']
-            user = authenticate(request, email=email, password=password)
-            if user is not None:
-                login(request, user)
-                # Redirect based on user role
-                if user.is_superuser:
-                    return redirect('admin_home')  # Redirect to admin dashboard for superusers
-                department_name = user.department.dept_Name if user.department else None
-                designation_name = user.designation.user_type if user.designation else None
-
-                # Redirect based on department and designation
-                if designation_name == 'Executive' and department_name == 'Sales':
-                    return redirect('sales_home')
-                elif designation_name == 'Manager' and department_name == 'Sales':
-                    return redirect('vender_home')
-                elif designation_name == 'Assistant Manager' and department_name == 'Purchase':
-                    return redirect('assistant_manager_purchase_dashboard')
-                elif designation_name == 'Executive' and department_name == 'Logistics':
-                    return redirect('executive_logistics_dashboard')
-                else:
-                    return redirect('default_dashboard')  # Default page for other users
-    else:
-        form = CustomLoginForm()
-
-    return render(request, 'login.html', {'form': form})
+# def login_view(request):
+#     if request.method == 'POST':
+#         form = CustomLoginForm(request.POST)
+#         if form.is_valid():
+#             email = form.cleaned_data['email']
+#             password = form.cleaned_data['password']
+#             user = authenticate(request, email=email, password=password)
+#             if user is not None:
+#                 login(request, user)
+#                 # Redirect based on user role
+#                 if user.is_superuser:
+#                     return redirect('admin_home')  # Redirect to admin dashboard for superusers
+#                 department_name = user.department.dept_Name if user.department else None
+#                 designation_name = user.designation.user_type if user.designation else None
+#
+#                 # Redirect based on department and designation
+#                 if designation_name == 'Executive' and department_name == 'Sales':
+#                     return redirect('sales_home')
+#                 elif designation_name == 'Manager' and department_name == 'Sales':
+#                     return redirect('vender_home')
+#                 elif designation_name == 'Assistant Manager' and department_name == 'Purchase':
+#                     return redirect('manager_home')
+#                 elif designation_name == 'Executive' and department_name == 'Logistics':
+#                     return redirect('manager_home')
+#                 else:
+#                     return redirect('default_dashboard')  # Default page for other users
+#     else:
+#         form = CustomLoginForm()
+#
+#     return render(request, 'login.html', {'form': form})
 
 
 def logout_view(request):
@@ -111,7 +139,7 @@ def add_department(request):
         form = department_Form(request.POST)  # Use request.FILES for file upload
         if form.is_valid():
             form.save()
-            return redirect('adddepartment')  # Redirect to a list view or another page after saving
+            return redirect('add_designation')  # Redirect to a list view or another page after saving
     else:
         form = department_Form()
 
@@ -123,7 +151,7 @@ def add_designation(request):
         form = designation_Form(request.POST)  # Use request.FILES for file upload
         if form.is_valid():
             form.save()
-            return redirect('add_designation')  # Redirect to a list view or another page after saving
+            return redirect('admin_home')  # Redirect to a list view or another page after saving
     else:
         form = designation_Form()
 
@@ -138,20 +166,20 @@ def view_users(request):
     return render(request, 'register/view_users.html', {'view': view, 'menus': menus})
 
 
-# def create_permission(request,id):
-#     menus = Menu.objects.prefetch_related('submenus').all()
-#
-#     if request.method == 'POST':
-#         form = Permission_Form(request.POST)
-#         if form.is_valid():
-#             permission = form.save(commit=False)
-#             permission.user_id =id  # Associate the current user
-#             permission.save()
-#             form.save_m2m()  # Save many-to-many data for the form
-#             return redirect('view_users')  # Redirect to a success page or list view
-#     else:
-#         form = Permission_Form()
-#     return render(request, 'add_privilages.html', {'form': form,'menus':menus})
+def create_permission(request,id):
+    menus = Menu.objects.prefetch_related('submenus').all()
+
+    if request.method == 'POST':
+        form = Permission_Form(request.POST)
+        if form.is_valid():
+            permission = form.save(commit=False)
+            permission.user_id =id  # Associate the current user
+            permission.save()
+            form.save_m2m()  # Save many-to-many data for the form
+            return redirect('view_users')  # Redirect to a success page or list view
+    else:
+        form = Permission_Form()
+    return render(request, 'register/add_permissions.html', {'form': form,'menus':menus})
 
 
 from django.http import JsonResponse
@@ -160,3 +188,69 @@ def load_designations(request):
     department_id = request.GET.get('department_id')
     designations = designation.objects.filter(dept_id=department_id).values('id', 'user_type')  # Adjust field names as necessary
     return JsonResponse(list(designations), safe=False)
+
+
+def login_view(request):
+    if request.method == 'POST':
+        form = CustomLoginForm(request.POST)
+        if form.is_valid():
+            email = form.cleaned_data['email']
+            password = form.cleaned_data['password']
+            user = authenticate(request, email=email, password=password)
+            if user is not None:
+                login(request, user)
+                # Redirect based on user role
+                if user.is_superuser:
+                    return redirect('admin_home')  # Redirect to admin dashboard for superusers
+
+                department_name = user.department.dept_Name if user.department else None
+                designation_name = user.designation.user_type if user.designation else None
+
+                # Redirect based on department and designation
+                if designation_name == 'CEO' and department_name == 'Admin':
+                    return redirect('admin_home')
+                elif user.is_staff:
+                    return redirect('staff_home')
+
+                else:
+                    return redirect('login')  # Default page for other users
+            else:
+                # Add an error to the form if authentication fails
+                form.add_error(None, "Invalid email or password.")
+    else:
+        form = CustomLoginForm()
+
+    return render(request, 'login.html', {'form': form})
+
+def logout_view(request):
+    logout(request)
+    # Redirect to a specific page after logout (e.g., home page)
+    return redirect(reverse('admin'))
+
+def  user_search(request):
+    menus = Menu.objects.prefetch_related('submenus').all()
+    user_list = CustomUser.objects.all()  # Default to all vendors
+
+    if request.method == 'GET':
+        search_query = request.GET.get('search_query', '').strip()
+
+        if search_query:
+            # Build filters
+            filters = Q()
+
+        if search_query.isdigit():
+            filters &= Q(phone_number__icontains=search_query)  # Filter by user name
+
+        else:
+            filters &= Q(name__icontains=search_query)  # Filter by vendor phone number
+
+        # Apply filters if any were provided
+        if filters:
+            user_list = CustomUser.objects.filter(filters)
+
+    context = {
+        'view': user_list,  # This will be used in the template
+        'menus': menus,
+    }
+
+    return render(request, 'register/view_users.html', context)

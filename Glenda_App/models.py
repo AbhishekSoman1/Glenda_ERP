@@ -1,5 +1,9 @@
 from django.db import models
 
+from register_app.models import CustomUser
+from django.conf import settings
+
+
 # Create your models here.
 
 
@@ -27,3 +31,20 @@ class SubMenu(models.Model):
         verbose_name = "SubMenu"
         verbose_name_plural = "SubMenus"
         ordering = ['title']  # Optional: orders the submenus by title
+
+class Message(models.Model):
+    sender = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='sent_messages')
+    receiver = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='received_messages')
+    content = models.TextField()
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.sender} to {self.receiver}: {self.content}"
+
+
+class Event(models.Model):
+    title = models.CharField(max_length=100,null=True)
+    start = models.DateTimeField(null=True)
+
+    def __str__(self):
+        return self.title

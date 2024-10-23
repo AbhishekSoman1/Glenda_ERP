@@ -7,9 +7,14 @@ from purchase_app.forms import CategoryForm, RawMaterialForm
 from django.contrib import messages
 
 from purchase_app.models import RawMaterials, RawMaterialCategory
+from register_app.models import MenuPermissions
 
 
 # Create your views here.
+
+
+
+
 
 def view_rawmaterials(request):
     menus = Menu.objects.prefetch_related('submenus').all()

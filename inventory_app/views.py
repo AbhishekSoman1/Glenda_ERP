@@ -4,6 +4,7 @@ import io
 from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.template.loader import get_template
+<<<<<<< HEAD
 
 
 from Glenda_App.models import Menu
@@ -13,9 +14,16 @@ from inventory_app.models import RawMaterialsStock,Finished_Goods_Stock,Finished
 from production_app.models import water_Finished_Goods,water_Finished_goods_category
 from register_app.models import department
 
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> 9a913e1cb15a3bc11ff9238e022be96a8748665e
+=======
+>>>>>>> 64b3d20419b8417ad6be80a226ded5fd35487072
+>>>>>>> master
 from inventory_app.forms import Raw_materials_StockForm, Finished_Goods_StockForm,Damaged_Goods_StockForm
 from inventory_app.models import RawMaterialsStock, Finished_Goods_Stock, Damaged_Goods_Stock
-from production_app.models import water_Finished_Goods,damaged_Goods
+from production_app.models import water_Finished_Goods,damaged_Goods,Damaged_good_category
 from purchase_app.models import RawMaterials
 from Glenda_App.models import Menu
 from xhtml2pdf import pisa
@@ -270,42 +278,24 @@ def damagedgoods_stock_history(request,id):
 
 
 def generate_pdf(request,id):
-    # Create a file-like buffer to receive PDF data.
-    buffer = io.BytesIO()
+    view = Damaged_Goods_Stock.objects.filter(damaged_id=id).first()
+    filename = f"{view.damaged.category.category_name}_inventory_report.pdf"
 
-    # Create the PDF object, using the buffer as its "file."
-    p = canvas.Canvas(buffer)
+    damaged = Damaged_Goods_Stock.objects.filter(damaged_id=id)
+    context = {'view': damaged, 'name': view}
 
-    # Retrieve all items from the database
-    items = Damaged_Goods_Stock.objects.filter(damaged_id=id)
+    template = get_template('inventory/damaged_stock_pdf.html')
+    html = template.render(context)
 
-    # Set up the PDF layout
-    p.drawString(100, 800, "Damaged Goods Stock List")
+    # Create the HttpResponse object with the appropriate PDF headers
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = f'attachment; filename="{filename}"'
 
-    # Column headers
-    p.drawString(100, 770, "Category")
-    p.drawString(200, 770, "Name")
-    p.drawString(300, 770, "Stock")
-    p.drawString(400, 770, "Description")
-
-    y_position = 750  # Initial Y position for drawing text
-
-    # Draw each item's details in the PDF
-    for item in items:
-        p.drawString(100, y_position, str(item.damaged.category))
-        p.drawString(200, y_position, item.damaged.name)
-        p.drawString(300, y_position, str(item.stock))
-        p.drawString(400, y_position, item.damaged.description)
-        y_position -= 20  # Move down for the next item
-
-    # Close the PDF object cleanly.
-    p.showPage()
-    p.save()
-
-    # Seek to the beginning of the BytesIO buffer.
-    buffer.seek(0)
-
-    return FileResponse(buffer, as_attachment=True, filename='damaged_goods_stock_list.pdf')
+    pdf_status = pisa.CreatePDF(
+        html,
+        dest=response
+    )
+    return response
 
 def generate_csv(request, id):
     # Create the HttpResponse object with the appropriate CSV header.
@@ -327,31 +317,103 @@ def generate_csv(request, id):
 
     # Return the CSV file as a response
     return response
+<<<<<<< HEAD
+=======
+def generate_full_pdf(request):
+    view = Damaged_Goods_Stock.objects.all()
+    filename = "full_analysis_report.pdf"
+
+    damaged = Damaged_Goods_Stock.objects.all()
+    context = {'view': damaged, 'name': view}
+
+    template = get_template('inventory/damaged_full_stock_pdf.html')
+    html = template.render(context)
+
+    # Create the HttpResponse object with the appropriate PDF headers
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = f'attachment; filename="{filename}"'
+
+    pdf_status = pisa.CreatePDF(
+        html,
+        dest=response
+    )
+    return response
+
+def damaged_search(request):
+    categories = Damaged_good_category.objects.all()
+    damaged_goods_list = damaged_Goods.objects.all()
+    menus = Menu.objects.prefetch_related('submenus').all()
+
+    context = {
+        'view': damaged_goods_list,  # This is the queryset for the table in the HTML
+        'categories': categories,
+        'menus':menus
+    }
+
+    # Handle search requests
+    if request.method == 'GET':
+        damaged_name = request.GET.get('name', None)
+        damaged_category = request.GET.get('category', None)
+
+        # Build filters
+        filters = Q()
+
+        # If the search name is provided, filter by the name in damaged_Goods
+        if damaged_name:
+            filters &= Q(name__icontains=damaged_name)
+
+        # If a valid category is selected, filter by the category
+        if damaged_category:
+            filters &= Q(category_id=damaged_category)  # Use category_id to filter
+
+        # Apply the filters to the queryset if filters are provided
+        if filters:
+            damaged_goods_list = damaged_Goods.objects.filter(filters)
+
+        # Update the context with the filtered queryset
+        context['view'] = damaged_goods_list
+
+    return render(request, 'inventory/view_damaged_goods.html', context)
+>>>>>>> master
 
 
 def generate_excel(request):
+    # Create a Workbook
     wb = Workbook()
     ws = wb.active
 
-    ws.merge_cells('A1:D1')
-    ws['A1']= 'Damaged Goods Stock List'
-    headline_font = ws['A1'].font.copy(bold=True,size=20)
-    ws['A1'].font = headline_font
-    ws['A1'].alignment = Alignment(horizontal='center')
-    ws.append(['Category','Name','Total Stock'])
+    # Write a headline row that spans all columns
+    ws.merge_cells('A1:D1')  # Adjust based on your number of columns
+    ws['A1'] = 'Damaged Goods Stock List'
 
+    # Set font properties including bold and increased font size
+    headline_font = Font(bold=True, size=14)  # Set bold and font size to 14
+    ws['A1'].font = headline_font  # Apply the font to the headline
+
+    # Center the headline text
+    ws['A1'].alignment = Alignment(horizontal='center')  # Center alignment
+
+    # Write the header row
+    ws.append([ 'Category', 'Name', 'Total Stock'])
+
+    # Retrieve all items from the database
     items = Damaged_Goods_Stock.objects.all()
 
+    # Write data rows
     for item in items:
         ws.append([
-            item.damaged.category.category_name,
-            item.damaged.name,
-            item.stock
+            item.damaged.category.category_name,  # Category name
+            item.damaged.name,  # Item name
+            item.stock  # Total stock
         ])
+
+    # Create an HTTP response with the appropriate Excel header
     response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
     response['Content-Disposition'] = 'attachment; filename="damaged_goods_stock_list.xlsx"'
 
+    # Save the workbook to the response
     wb.save(response)
+<<<<<<< HEAD
     return response
 
 def search(request):
@@ -365,6 +427,7 @@ def search(request):
         else:
             data = "No search item"
     return render(request, 'inventory/searched_damaged_goods.html', {"items": items})
+<<<<<<< HEAD
 
 
 
@@ -442,3 +505,9 @@ def finishedgoods_message_request(request):
 
 
 
+=======
+>>>>>>> 9a913e1cb15a3bc11ff9238e022be96a8748665e
+=======
+    return response
+>>>>>>> 64b3d20419b8417ad6be80a226ded5fd35487072
+>>>>>>> master
