@@ -8,6 +8,7 @@ from django.contrib import messages
 
 from purchase_app.models import RawMaterials, RawMaterialCategory
 from register_app.models import MenuPermissions
+from inventory_app.models import Raw_material_request
 
 
 # Create your views here.
@@ -78,3 +79,48 @@ def delete_rawmaterils(request, id):
 
     # Render the confirmation page for GET requests
     return render(request, 'purchase/delete_rawmaterials.html', {'dtl': dtl,'menus':menus})
+
+
+def message_request(request):
+    menus = Menu.objects.prefetch_related('submenus').all()
+    message = Raw_material_request.objects.all()
+
+    return render(request,'purchase/message_request_list.html', {'menus': menus, 'message':message})
+
+
+def message_response(request, id):
+    menus = Menu.objects.prefetch_related('submenus').all()
+
+    # Fetch the specific request by its primary key (id)
+    request_data = get_object_or_404(Raw_material_request, pk=id)
+
+    if request.method == 'POST':
+
+        print(request.POST)  # Debugging: Print the POST data
+
+        if 'accept' in request.POST:
+            # If 'Accept' button is clicked, set status to 'completed'
+            request_data.status = 'completed'
+            request_data.save()
+            return redirect('message_requests')
+
+        elif 'decline' in request.POST:
+            decline_reason = request.POST.get('response')
+
+            if decline_reason:
+                request_data.status = 'declined'
+                request_data.response = decline_reason  # Save decline reason
+                request_data.save()
+                return redirect('message_requests')
+            else:
+                error_message = "Please provide a reason for declining"
+
+                return render(request, 'purchase/message_request_view.html', {
+                    'data': request_data,
+                    'menus': menus,
+                    'error_message': error_message})
+
+    return render(request, 'purchase/message_request_view.html', {
+        'data': request_data,
+        'menus': menus
+    })

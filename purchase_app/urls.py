@@ -11,5 +11,7 @@ urlpatterns = [
     path('view_rawmaterials',views.view_rawmaterials,name='view_rawmaterials'),
     path('update_rawmaterials/<int:id>', views.update_rawmaterials, name='update_rawmaterials'),
     path('delete_raw/<int:id>', views.delete_rawmaterils, name='delete_raw'),
+    path('message_requests', views.message_request, name='message_requests'),
+    path('message_response/<int:id>', views.message_response, name='message_response')
 
 ]
