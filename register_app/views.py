@@ -207,7 +207,7 @@ def login_view(request):
                 designation_name = user.designation.user_type if user.designation else None
 
                 # Redirect based on department and designation
-                if designation_name == 'CEO' and department_name == 'CEO':
+                if designation_name == 'CEO' and department_name == 'Admin':
                     return redirect('admin_home')
                 elif user.is_staff:
                     return redirect('staff_home')

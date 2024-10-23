@@ -74,6 +74,9 @@ def index(request):
     }
 
     return render(request, 'index.html', context)
+
+
+
 from django.http import JsonResponse
 
 def raw_materials_data(request):
