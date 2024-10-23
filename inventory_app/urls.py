@@ -9,9 +9,7 @@ urlpatterns = [
     path('update_stocks/<int:id>', views.update_stocks, name='update_stocks'),
     path('finishedgoods_stock_view', views.finishedgoods_stock_view, name='finishedgoods_stock_view'),
     path('update_finished_goods_stocks/<int:id>', views.update_finished_goods_stocks, name='update_finished_goods_stocks'),
-
     path('finishedgoods_stock_history/<int:id>', views.finishedgoods_stock_history, name='finishedgoods_stock_history'),
-
     path('finishedgoods_stock_history/<int:id>', views.finishedgoods_stock_history, name='finishedgoods_stock_history'),
     path('damagedgoods_stock_view', views.damagedgoods_stock_view, name='damagedgoods_stock_view'),
     path('update_damaged_goods_stocks/<int:id>', views.update_damaged_goods_stocks, name='update_damaged_goods_stocks'),
@@ -23,6 +21,10 @@ urlpatterns = [
     path('generate-pdf/<int:id>', views.generate_pdf, name='generate_pdf'),
     path('generate_csv/<int:id>',views.generate_csv,name='generate_csv'),
     path('generate_excel',views.generate_excel,name='generate_excel'),
-    path('search',views.search,name='search')
+    path('search',views.search,name='search'),
+    path('finishedgoods_search',views.finishedgoods_search,name='finishedgoods_search'),
+    path('finishedgoods_message_request',views.finishedgoods_message_request,name='finishedgoods_message_request'),
+
+
 ]
 
