@@ -44,7 +44,8 @@ INSTALLED_APPS = [
     'production_app',
     'inventory_app',
     'logistics_app',
-    'vendor_app'
+    'vendor_app',
+    'hr_app',
 
 ]
 

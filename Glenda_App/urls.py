@@ -13,5 +13,9 @@ urlpatterns = [
     # path('pie-chart/', views.pie_chart_view, name='pie_chart'),
     path('api/raw-materials/', raw_materials_data, name='raw_materials_data'),  # API endpoint
     # path('stock-data/', stock_data, name='stock_data'),
+    path('chat',views.user_list, name='user_list'),
+    path('chat/users/<int:user_id>/',views.chat_with_user, name='chat_with_user'),
+    path('chat/send_message/', views.send_message, name='send_message'),  # API endpoint for sending message
+
 
 ]
