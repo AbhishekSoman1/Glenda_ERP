@@ -88,7 +88,7 @@ def create_menu(request):
         form = MenuForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('index')  # Change to redirect to index after creation
+            return redirect('admin_home')  # Change to redirect to index after creation
     else:
         form = MenuForm()
     return render(request, 'create_menu.html', {'form': form})
@@ -98,7 +98,7 @@ def create_submenu(request):
         form = SubMenuForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('index')  # Change to redirect to index after creation
+            return redirect('admin_home')  # Change to redirect to index after creation
     else:
         form = SubMenuForm()
     return render(request, 'create_submenu.html', {'form': form})

@@ -16,6 +16,7 @@ urlpatterns = [
     path('ajax/load-designations/', views.load_designations, name='load_designations'),
     path('logout/', views.logout_view, name='logout'),
     path('create_permission/<int:id>', views.create_permission, name='create_permission'),
+    path('user_search',views.user_search,name='user_search')
 
 ]
 
