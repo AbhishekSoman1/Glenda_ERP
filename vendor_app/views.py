@@ -2,9 +2,13 @@ import csv
 
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
+<<<<<<< HEAD
 from django.template.loader import get_template
 from xhtml2pdf import pisa
 
+=======
+from django.db.models import Q
+>>>>>>> master
 from Glenda_App.models import Menu
 from register_app.forms import CustomUserForm
 from django.contrib import messages
@@ -97,3 +101,36 @@ def vendor_list_csv(request):
         writer.writerow([vendor.name, vendor.email, vendor.phone_number])
 
     return response
+
+<<<<<<< HEAD
+
+
+=======
+def vendor_search(request):
+    menus = Menu.objects.prefetch_related('submenus').all()
+    vendor_list = CustomUser.objects.all()  # Default to all vendors
+
+    if request.method == 'GET':
+        search_query = request.GET.get('search_query', '').strip()
+
+        if search_query:
+            # Build filters
+            filters = Q()
+
+        if search_query.isdigit():
+            filters &= Q(phone_number__icontains=search_query)  # Filter by user name
+
+        else:
+            filters &= Q(name__icontains=search_query)  # Filter by vendor phone number
+
+        # Apply filters if any were provided
+        if filters:
+            vendor_list = CustomUser.objects.filter(filters)
+
+    context = {
+        'view': vendor_list,  # This will be used in the template
+        'menus': menus,
+    }
+
+    return render(request, 'vendor/view_vendor_list.html', context)
+>>>>>>> master

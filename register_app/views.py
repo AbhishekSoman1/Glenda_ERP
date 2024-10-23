@@ -1,6 +1,6 @@
 from Glenda_App.models import Menu
 from register_app.forms import CustomUserForm, CustomLoginForm, designation_Form, department_Form, Permission_Form
-
+from django.db.models import Q
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from django.contrib import messages
@@ -226,3 +226,31 @@ def logout_view(request):
     logout(request)
     # Redirect to a specific page after logout (e.g., home page)
     return redirect(reverse('admin'))
+
+def  user_search(request):
+    menus = Menu.objects.prefetch_related('submenus').all()
+    user_list = CustomUser.objects.all()  # Default to all vendors
+
+    if request.method == 'GET':
+        search_query = request.GET.get('search_query', '').strip()
+
+        if search_query:
+            # Build filters
+            filters = Q()
+
+        if search_query.isdigit():
+            filters &= Q(phone_number__icontains=search_query)  # Filter by user name
+
+        else:
+            filters &= Q(name__icontains=search_query)  # Filter by vendor phone number
+
+        # Apply filters if any were provided
+        if filters:
+            user_list = CustomUser.objects.filter(filters)
+
+    context = {
+        'view': user_list,  # This will be used in the template
+        'menus': menus,
+    }
+
+    return render(request, 'register/view_users.html', context)

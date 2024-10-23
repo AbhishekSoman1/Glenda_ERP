@@ -5,6 +5,8 @@ from production_app.forms import water_category_Form, finishedwaterForm, damaged
 from django.contrib import messages
 from django.db.models import Q
 from production_app.models import water_Finished_goods_category, water_Finished_Goods, damaged_Goods,Damaged_good_category
+from inventory_app.models import Finished_Goods_Request
+from inventory_app.forms import Finished_Goods_RequestForm
 
 
 # Create your views here.
@@ -138,6 +140,55 @@ def update_damage(request,id):
         form = update_damaged_goods_Form(instance=details)
     return render(request,'production/update_damage.html',{'menus':menus,'form':form})
 
+<<<<<<< HEAD
+
+def request_messages(request):
+    menus = Menu.objects.prefetch_related('submenus').all()
+    data = Finished_Goods_Request.objects.all()
+
+    return render(request,'production/production_request_messages.html',{'data':data,'menus':menus})
+
+
+def request_messages_detail(request, id):
+    menus = Menu.objects.prefetch_related('submenus').all()
+
+    # Fetch the specific request by its primary key (id)
+    request_data = get_object_or_404(Finished_Goods_Request, pk=id)
+
+    if request.method == 'POST':
+        # Check if "Accept" button was clicked
+        if 'accept' in request.POST:
+            # Update status to 'completed'
+            request_data.status = 'completed'
+            request_data.save()
+            return redirect('request_messages')
+
+        # Check if "Decline" button was clicked
+        elif 'decline' in request.POST:
+            # Get the response from the POST data
+            response = request.POST.get('response', '').strip()
+
+            if response:
+                # Update the response and status if the response is provided
+                request_data.response = response
+                request_data.status = 'declined'
+                request_data.save()
+                return redirect('request_messages')
+            else:
+                # If no response is provided, show an error message
+                error_message = "Please provide a reason for declining."
+                return render(request, 'production/production_request_messages_in_detail.html', {
+                    'data': request_data,
+                    'menus': menus,
+                    'error_message': error_message
+                })
+
+    # Render the page with the form and request data
+    return render(request, 'production/production_request_messages_in_detail.html', {
+        'data': request_data,
+        'menus': menus
+    })
+=======
 def search(request):
     # Fetch all categories
     categories = Damaged_good_category.objects.all()
@@ -174,3 +225,4 @@ def search(request):
     }
 
     return render(request, 'production/damaged_goods.html', context)
+>>>>>>> master

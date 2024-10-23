@@ -4,6 +4,23 @@ import io
 from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.template.loader import get_template
+<<<<<<< HEAD
+
+
+from Glenda_App.models import Menu
+
+from inventory_app.forms import Raw_materials_StockForm, Finished_Goods_StockForm,Finished_Goods_RequestForm
+from inventory_app.models import RawMaterialsStock,Finished_Goods_Stock,Finished_Goods_Request
+from production_app.models import water_Finished_Goods,water_Finished_goods_category
+from register_app.models import department
+
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> 9a913e1cb15a3bc11ff9238e022be96a8748665e
+=======
+>>>>>>> 64b3d20419b8417ad6be80a226ded5fd35487072
+>>>>>>> master
 from inventory_app.forms import Raw_materials_StockForm, Finished_Goods_StockForm,Damaged_Goods_StockForm
 from inventory_app.models import RawMaterialsStock, Finished_Goods_Stock, Damaged_Goods_Stock
 from production_app.models import water_Finished_Goods,damaged_Goods,Damaged_good_category
@@ -94,6 +111,7 @@ def update_finished_goods_stocks(request, id):
 def finishedgoods_stock_view(request):
     menus = Menu.objects.prefetch_related('submenus').all()
     finished_goods = water_Finished_Goods.objects.prefetch_related('stocks').all()
+    categories = water_Finished_goods_category.objects.all()
 
     # Calculate total stock for each raw material
     total_stocks = {
@@ -101,7 +119,7 @@ def finishedgoods_stock_view(request):
         for material in finished_goods
     }
 
-    return render(request, 'inventory/view_finished_goods.html', {'view': finished_goods, 'menus': menus, 'total_stocks': total_stocks})
+    return render(request, 'inventory/view_finished_goods.html', {'view': finished_goods, 'menus': menus, 'total_stocks': total_stocks,'categories':categories})
 
 
 def finishedgoods_stock_history(request,id):
@@ -299,6 +317,8 @@ def generate_csv(request, id):
 
     # Return the CSV file as a response
     return response
+<<<<<<< HEAD
+=======
 def generate_full_pdf(request):
     view = Damaged_Goods_Stock.objects.all()
     filename = "full_analysis_report.pdf"
@@ -354,6 +374,7 @@ def damaged_search(request):
         context['view'] = damaged_goods_list
 
     return render(request, 'inventory/view_damaged_goods.html', context)
+>>>>>>> master
 
 
 def generate_excel(request):
@@ -392,4 +413,101 @@ def generate_excel(request):
 
     # Save the workbook to the response
     wb.save(response)
+<<<<<<< HEAD
     return response
+
+def search(request):
+    items = []
+    if request.method == "POST":
+        search_obj = request.POST.get("search")
+        if search_obj:
+            items = damaged_Goods.objects.filter(
+                Q(description__icontains=search_obj) | Q(name__icontains=search_obj)
+            )
+        else:
+            data = "No search item"
+    return render(request, 'inventory/searched_damaged_goods.html', {"items": items})
+<<<<<<< HEAD
+
+
+
+def finishedgoods_search(request):
+    menus = Menu.objects.prefetch_related('submenus').all()
+
+    finished_goods_list = water_Finished_Goods.objects.all()
+    categories = water_Finished_goods_category.objects.all()
+
+    context = {
+        'view': finished_goods_list,  # This is the queryset for the table in the HTML
+        'categories': categories,  # Pass the categories for the dropdown
+        'menus': menus
+    }
+
+    # Handle search requests
+    if request.method == 'POST':
+        search_name = request.POST.get('name', None)
+        search_category = request.POST.get('category', None)
+
+        # Build filters
+        filters = Q()
+
+        # If the search name is provided, filter by name (case insensitive)
+        if search_name:
+            filters &= Q(name__icontains=search_name)
+
+        # If a valid category is selected, filter by category
+        if search_category and search_category.isdigit():
+            filters &= Q(category_id=int(search_category))
+
+        # Apply the filters to the queryset
+        if filters:
+            finished_goods_list = water_Finished_Goods.objects.filter(filters)
+
+        # Update the context with the filtered queryset
+        context['view'] = finished_goods_list
+
+    return render(request, 'inventory/view_finished_goods.html', context)
+
+
+def finishedgoods_message_request(request):
+    menus = Menu.objects.prefetch_related('submenus').all()
+
+    dept = department.objects.all()
+    category = water_Finished_goods_category.objects.all()
+    name = water_Finished_Goods.objects.all()
+    view = Finished_Goods_Request.objects.all()
+
+    if request.method == 'POST':
+        form = Finished_Goods_RequestForm(request.POST)
+        print(request.POST)  # Debug: Print the form data
+        if form.is_valid():
+            print("Form is valid")  # Debug: Form is valid
+            form_entry = form.save(commit=False)
+            # Ensure foreign key is assigned correctly
+            form_entry.name = form.cleaned_data['name']
+            form_entry.status = 'Pending'
+            form_entry.save()
+            return redirect('Raw_materials_view')
+        else:
+            print(form.errors)  # Debug: Print form errors
+    else:
+        form = Finished_Goods_RequestForm()
+
+    return render(request, 'inventory/finishedgoods_message_request.html', {
+        'form': form,
+        'menus': menus,
+        'department': dept,
+        'category': category,
+        'name': name,
+        'view': view
+    })
+
+
+
+
+=======
+>>>>>>> 9a913e1cb15a3bc11ff9238e022be96a8748665e
+=======
+    return response
+>>>>>>> 64b3d20419b8417ad6be80a226ded5fd35487072
+>>>>>>> master
