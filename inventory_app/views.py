@@ -4,26 +4,13 @@ import io
 from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.template.loader import get_template
-<<<<<<< HEAD
-
-
 from Glenda_App.models import Menu
-
-from inventory_app.forms import Raw_materials_StockForm, Finished_Goods_StockForm,Finished_Goods_RequestForm
-from inventory_app.models import RawMaterialsStock,Finished_Goods_Stock,Finished_Goods_Request
-from production_app.models import water_Finished_Goods,water_Finished_goods_category
+from inventory_app.forms import Raw_materials_StockForm, Finished_Goods_StockForm, Finished_Goods_RequestForm, \
+    Damaged_Goods_StockForm
+from inventory_app.models import RawMaterialsStock, Finished_Goods_Stock, Finished_Goods_Request, Damaged_Goods_Stock
+from production_app.models import water_Finished_Goods, water_Finished_goods_category, damaged_Goods, \
+    Damaged_good_category
 from register_app.models import department
-
-<<<<<<< HEAD
-=======
-=======
->>>>>>> 9a913e1cb15a3bc11ff9238e022be96a8748665e
-=======
->>>>>>> 64b3d20419b8417ad6be80a226ded5fd35487072
->>>>>>> master
-from inventory_app.forms import Raw_materials_StockForm, Finished_Goods_StockForm,Damaged_Goods_StockForm
-from inventory_app.models import RawMaterialsStock, Finished_Goods_Stock, Damaged_Goods_Stock
-from production_app.models import water_Finished_Goods,damaged_Goods,Damaged_good_category
 from purchase_app.models import RawMaterials
 from Glenda_App.models import Menu
 from xhtml2pdf import pisa
@@ -32,7 +19,6 @@ from openpyxl.styles import Font,Alignment
 from openpyxl import Workbook
 from django.http import FileResponse
 from reportlab.pdfgen import canvas
-
 from django.db.models import Sum
 
 # Create your views here.
@@ -317,8 +303,7 @@ def generate_csv(request, id):
 
     # Return the CSV file as a response
     return response
-<<<<<<< HEAD
-=======
+
 def generate_full_pdf(request):
     view = Damaged_Goods_Stock.objects.all()
     filename = "full_analysis_report.pdf"
@@ -374,7 +359,7 @@ def damaged_search(request):
         context['view'] = damaged_goods_list
 
     return render(request, 'inventory/view_damaged_goods.html', context)
->>>>>>> master
+
 
 
 def generate_excel(request):
@@ -413,8 +398,7 @@ def generate_excel(request):
 
     # Save the workbook to the response
     wb.save(response)
-<<<<<<< HEAD
-    return response
+
 
 def search(request):
     items = []
@@ -427,7 +411,6 @@ def search(request):
         else:
             data = "No search item"
     return render(request, 'inventory/searched_damaged_goods.html', {"items": items})
-<<<<<<< HEAD
 
 
 
@@ -487,7 +470,7 @@ def finishedgoods_message_request(request):
             form_entry.name = form.cleaned_data['name']
             form_entry.status = 'Pending'
             form_entry.save()
-            return redirect('Raw_materials_view')
+            return redirect('finishedgoods_stock_view')
         else:
             print(form.errors)  # Debug: Print form errors
     else:
@@ -502,12 +485,3 @@ def finishedgoods_message_request(request):
         'view': view
     })
 
-
-
-
-=======
->>>>>>> 9a913e1cb15a3bc11ff9238e022be96a8748665e
-=======
-    return response
->>>>>>> 64b3d20419b8417ad6be80a226ded5fd35487072
->>>>>>> master
