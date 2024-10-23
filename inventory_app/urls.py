@@ -24,6 +24,9 @@ urlpatterns = [
     path('search',views.search,name='search'),
     path('finishedgoods_search',views.finishedgoods_search,name='finishedgoods_search'),
     path('finishedgoods_message_request',views.finishedgoods_message_request,name='finishedgoods_message_request'),
-    path('damaged_search',views.damaged_search,name='damaged_search')
+    path('damaged_search',views.damaged_search,name='damaged_search'),
+    path('raw_material_search', views.raw_material_search, name='raw_material_search'),
+    path('raw_material_message_request', views.raw_material_message_request, name='raw_material_message_request'),
+
 ]
 

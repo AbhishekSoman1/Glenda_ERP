@@ -225,4 +225,3 @@ def search(request):
     }
 
     return render(request, 'production/damaged_goods.html', context)
-

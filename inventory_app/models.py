@@ -3,7 +3,7 @@ from datetime import timedelta
 from django.db import models
 from production_app.models import damaged_Goods
 from production_app.models import water_Finished_Goods,water_Finished_goods_category
-from purchase_app.models import RawMaterials
+from purchase_app.models import RawMaterials,RawMaterialCategory
 from register_app.models import department
 
 
@@ -49,3 +49,19 @@ class Finished_Goods_Request(models.Model):
 
     def __str__(self):
         return f"Request to {self.department.dept_Name} for {self.stock} units of {self.name.name}"
+
+
+
+class Raw_material_request(models.Model):
+    department = models.ForeignKey(department, on_delete=models.CASCADE, null=True)
+    category = models.ForeignKey(RawMaterialCategory, on_delete=models.CASCADE, null=True)
+    name = models.ForeignKey(RawMaterials, on_delete=models.CASCADE, null=True)
+    stock = models.IntegerField(null=True)
+    input_date = models.DateField(null=True)
+    date = models.DateTimeField(auto_now=True)
+    remarks = models.TextField(default='')
+    status = models.CharField(max_length=155, null=True)
+    response = models.TextField(default='')
+
+    def _str_(self):
+        return f"request to {self.department.dept_Name} for {self.stock} units of {self.name.name}"

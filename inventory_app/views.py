@@ -5,13 +5,13 @@ from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.template.loader import get_template
 from Glenda_App.models import Menu
-from inventory_app.forms import Raw_materials_StockForm, Finished_Goods_StockForm, Finished_Goods_RequestForm, \
-    Damaged_Goods_StockForm
-from inventory_app.models import RawMaterialsStock, Finished_Goods_Stock, Finished_Goods_Request, Damaged_Goods_Stock
-from production_app.models import water_Finished_Goods, water_Finished_goods_category, damaged_Goods, \
-    Damaged_good_category
+
+
+from inventory_app.forms import Raw_materials_StockForm, Finished_Goods_StockForm,Finished_Goods_RequestForm,Damaged_Goods_StockForm,Raw_materials_requestForm
+from inventory_app.models import RawMaterialsStock,Finished_Goods_Stock,Finished_Goods_Request,Damaged_Goods_Stock,Raw_material_request
+from production_app.models import water_Finished_Goods,water_Finished_goods_category,damaged_Goods,Damaged_good_category
 from register_app.models import department
-from purchase_app.models import RawMaterials
+from purchase_app.models import RawMaterials,RawMaterialCategory
 from Glenda_App.models import Menu
 from xhtml2pdf import pisa
 from django.db.models import Q
@@ -29,6 +29,8 @@ from django.db.models import Sum
 def raw_materials_view(request):
     menus = Menu.objects.prefetch_related('submenus').all()
     raw_materials = RawMaterials.objects.prefetch_related('stocks').all()
+    categories = RawMaterialCategory.objects.all()
+
 
     # Calculate total stock for each raw material
     total_stocks = {
@@ -36,7 +38,7 @@ def raw_materials_view(request):
         for material in raw_materials
     }
 
-    return render(request, 'inventory/view_raw_materials.html', {'view': raw_materials, 'menus': menus, 'total_stocks': total_stocks})
+    return render(request, 'inventory/view_raw_materials.html', {'view': raw_materials, 'menus': menus, 'total_stocks': total_stocks,'categories':categories})
 
 def update_stocks(request, id):
     menus = Menu.objects.prefetch_related('submenus').all()
@@ -399,6 +401,8 @@ def generate_excel(request):
     # Save the workbook to the response
     wb.save(response)
 
+    return response
+
 
 def search(request):
     items = []
@@ -484,4 +488,79 @@ def finishedgoods_message_request(request):
         'name': name,
         'view': view
     })
+
+
+
+
+def raw_material_search(request):
+    menus = Menu.objects.prefetch_related('submenus').all()
+    stock = RawMaterialsStock.objects.all()  # All stock by default
+    categories = RawMaterialCategory.objects.all()  # Get distinct categories
+    search_list = stock  # Default to all stock if no search is performed
+    raw_materials = RawMaterials.objects.prefetch_related('stocks').all()
+
+    context = {
+        'view': raw_materials,
+        'data': stock,
+        'categories': categories,
+        'menus': menus
+    }
+
+    if request.method == 'POST':
+        category = request.POST.get('category', None)  # Get category from form
+        name = request.POST.get('name', None)          # Get name from form
+
+        filters = Q()
+
+        # Apply category filter if selected
+        if category and category.isdigit():
+            filters &= Q(category_id=int(category))
+
+        # Apply name filter if provided
+        if name:
+            filters &= Q(name__icontains=name)
+
+        # Filter stock based on combined filters
+        if filters:
+            search_list = RawMaterials.objects.filter(filters)
+
+            # Debugging: Logging or print statement
+            print(f"Filters applied: {filters}")
+            print(f"Filtered records count: {search_list.count()}")
+
+    context['view'] = search_list # Filtered stock data
+
+    return render(request, 'inventory/view_raw_materials.html', context)
+
+
+
+def raw_material_message_request(request):
+    menus = Menu.objects.prefetch_related('submenus').all()
+
+    dept = department.objects.all()
+    category = RawMaterialCategory.objects.all()
+    name= RawMaterials.objects.all()
+    view = Raw_material_request.objects.all()
+
+
+    if request.method == 'POST':
+        form = Raw_materials_requestForm(request.POST)
+        if form.is_valid():
+            form_entry = form.save(commit=False)
+            form_entry.name = form.cleaned_data['name']
+            form_entry.status = 'Pending'
+            form_entry.save()
+
+        return redirect('Raw_materials_view')  # Redirect to the list view
+    else:
+        form = Raw_materials_requestForm()
+
+    return render(request, 'inventory/raw_material_message_request.html', {
+        'form': form,
+        'menus': menus,
+        'department': dept,
+        'category': category,
+        'name': name,
+        'view':view}
+)
 

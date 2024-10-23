@@ -2,7 +2,7 @@
 
 from django import forms
 
-from inventory_app.models import RawMaterialsStock, Finished_Goods_Stock,Damaged_Goods_Stock,Finished_Goods_Request
+from inventory_app.models import RawMaterialsStock, Finished_Goods_Stock,Damaged_Goods_Stock,Finished_Goods_Request,Raw_material_request
 
 
 class Raw_materials_StockForm(forms.ModelForm):
@@ -57,3 +57,27 @@ class Finished_Goods_RequestForm(forms.ModelForm):
             'response': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Reason for Decline', 'style': 'display:none;'}),# Hidden by default
 
         }
+
+
+
+class Raw_materials_requestForm(forms.ModelForm):
+    class Meta:
+        model = Raw_material_request
+        fields = [
+            'department',
+            'category',
+            'name',
+            'stock',
+            'input_date',
+            'remarks',
+        ]
+
+        widgets = {
+            'department': forms.Select(attrs={'class': 'form-control', 'placeholder': 'Department'}),
+            'category': forms.Select(attrs={'class': 'form-control', 'placeholder': 'Category'}),
+            'name': forms.Select(attrs={'class': 'form-control', 'placeholder': 'Product Name'}),
+            'stock': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Required Quantity'}),
+            'input_date': forms.DateInput(attrs={'class': 'form-control', 'type': 'date', 'placeholder': 'Date'}),
+            'remarks': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Remarks'}),
+            'response': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Reason for Decline', 'style': 'display:none;'}), # Hidden by default
+}
