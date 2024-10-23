@@ -17,6 +17,8 @@ urlpatterns = [
     path('add_damaged_good_category',views.add_damaged_good_category, name='add_damaged_good_category'),
     path('damage_delete/<int:id>',views.damage_delete, name='damage_delete'),
     path('update_damage/<int:id>',views.update_damage, name='update_damage'),
+    path('request_messages',views.request_messages, name='request_messages'),
+    path('request_messages_detail/<int:id>',views.request_messages_detail, name='request_messages_detail'),
     path('search',views.search,name='search')
 
 ]

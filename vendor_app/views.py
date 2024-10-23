@@ -2,14 +2,18 @@ import csv
 
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
+from django.template.loader import get_template
+from xhtml2pdf import pisa
 from django.db.models import Q
 from Glenda_App.models import Menu
 from register_app.forms import CustomUserForm
 from django.contrib import messages
-
 from register_app.models import CustomUser
 from vendor_app.forms import VendorRegisterForm
 from vendor_app.models import vendor_register
+
+from django.template.loader import render_to_string, get_template
+from xhtml2pdf import pisa
 
 
 # Create your views here.
@@ -24,9 +28,9 @@ def view_vendor_list(request):
 def view_vendor_profile(request,id):
     menus = Menu.objects.prefetch_related('submenus').all()
 
-    view = vendor_register.objects.filter(user_id=id)
+    view = vendor_register.objects.get(user_id=id)
 
-    return render(request,'vendor/view_vendor_profile.html',{'view':view,'menus':menus})
+    return render(request,'vendor/view_vendor_profile.html',{'view':view,'menus':menus,'id':id})
 
 def vender_register_view(request):
     # Fetching menus and their related submenus for display
@@ -96,6 +100,8 @@ def vendor_list_csv(request):
 
     return response
 
+
+
 def vendor_search(request):
     menus = Menu.objects.prefetch_related('submenus').all()
     vendor_list = CustomUser.objects.all()  # Default to all vendors
@@ -123,3 +129,4 @@ def vendor_search(request):
     }
 
     return render(request, 'vendor/view_vendor_list.html', context)
+
