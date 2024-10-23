@@ -17,5 +17,4 @@ urlpatterns = [
     path('chat/users/<int:user_id>/',views.chat_with_user, name='chat_with_user'),
     path('chat/send_message/', views.send_message, name='send_message'),  # API endpoint for sending message
 
-
 ]
