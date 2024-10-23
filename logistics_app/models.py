@@ -12,9 +12,6 @@ class Vehicle(models.Model):
         return f"{self.vehicle_name} ({self.vehicle_nbr})"
 
 
-
-
-from django.db import models
 import requests
 
 class Route(models.Model):
