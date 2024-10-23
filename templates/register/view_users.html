@@ -31,7 +31,24 @@
 
                         <!-- Add User Button -->
                         <div class="mb-3">
-                            <a href="{% url 'register_view' %}" class="btn btn-primary">Add User</a>
+                            <form method="GET" action="{% url 'user_search' %}">
+                                <div class="row mb-4 align-items-end">
+                                    <div class="col-md-4">
+                                        <div class="input-group">
+                                            <a href="{% url 'register_view' %}" class="btn btn-primary" style="margin-right:10px;">Add User</a>
+                                             <label for="search" class="sr-only">Search by Name or Number</label>
+                                             <input type="text" class="form-control" id="search" name="search_query" placeholder="Search by Name or Number" value="{{ request.GET.search_query }}">
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-2">
+                                        <!-- Single Search Button -->
+                                        <button class="btn btn-primary" type="submit" id="search-btn">
+                                            <i class="fas fa-search"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
                         </div>
 
                         <table class="table mb-0" id="my-table">
@@ -51,7 +68,7 @@
                                 {% for i in view %}
                                 <tr>
 
-                                    <td><img src="{{ i.image.url }}" alt="Image description" width="70" height="70" />{{ i.name }}</td>
+                                    <td><img src="" alt="Image description" width="70" height="70" />{{ i.name }}</td>
                                     <td>{{ i.email }}</td>
                                     <td>{{ i.phone_number }}</td>
                                     <td>{{ i.department.dept_Name }}</td>

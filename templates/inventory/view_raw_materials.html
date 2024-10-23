@@ -23,45 +23,97 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-body">
+
+                        <!-- Search Bars at the top of the card -->
+                        <form method="POST" action="{% url 'raw_material_search' %}">
+                            {% csrf_token %}
+                            <div class="row mb-4">
+                                <div class="col-md-4">
+                                    <!-- Category Dropdown Search -->
+                                    <div class="input-group">
+                                        <select class="form-control" name="category">
+                                            <option value="" disabled selected>Search by Category</option>
+                                            {% for i in categories %}
+                                            <option value="{{ i.id }}">{{ i.category_name }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <!-- Name Search Bar -->
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" name="name" placeholder="Search by Name">
+                                    </div>
+                                </div>
+
+                                <div class="col-md-2">
+                                    <!-- Single Search Button -->
+                                    <button class="btn btn-primary" type="submit">
+                                        <i class="fas fa-search"></i>
+                                    </button>
+                                </div>
+                                <div class="col-md-2">
+                                    <!-- Send request Button -->
+                                    <a href="{% url 'raw_material_message_request' %}">
+                                        <button class="btn btn-primary" id="send-request">
+                                            Send Request
+                                        </button>
+                                    </a>
+                                </div>
+                            </div>
+                        </form>
+
                         <h4 class="mt-0 header-title"></h4>
                         <p class="text-muted mb-4 font-13"></p>
 
                         <table class="table mb-0" id="my-table">
-    <thead>
-        <tr>
-            <th>Image</th>
-            <th>Category</th>
-            <th>Name</th>
-            <th>Size</th>
-            <th>Color</th>
-            <th>Total Stock</th>
-            <th>Stock History</th>
-            <th>Add Stock</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for i in view %}
-        <tr>
-            <td><img src="{{ i.image.url }}" alt="Image description" width="120" height="70" /></td>
-            <td>{{ i.category.category_name }}</td>
-            <td>{{ i.name }}</td>
-            <td>{{ i.size }}</td>
-            <td>{{ i.color }}</td>
-            <td>{{ i.total_stock }}</td>  <!-- Display total stock -->
-            <td>
-                <a href="{% url 'raw_materials_stock_history' i.id %}">
-                    <button type="button" class="btn btn-purple waves-effect waves-light">
-                        <i class="mdi mdi-send mr-2"></i>History
-                    </button>
-                </a>
-            </td>
-            <td>
-                <a href="{% url 'update_stocks' i.id %}" class="btn btn-sm btn-success"><i class="fas fa-edit"></i></a>
-            </td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+                            <thead>
+                                <tr>
+                                    <th>Image</th>
+                                    <th>Category</th>
+                                    <th>Name</th>
+                                    <th>Size</th>
+                                    <th>Color</th>
+                                    <th>Total Stock</th>
+                                    <th>Stock History</th>
+                                    <th>Add Stock</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for i in view %}
+                                <tr>
+                                    <td><img src="{{ i.image.url }}" alt="Image description" width="120" height="70" /></td>
+                                    <td>{{ i.category.category_name }}</td>
+                                    <td>{{ i.name }}</td>
+                                    <td>{{ i.size }}</td>
+                                    <td>{{ i.color }}</td>
+                                    <td>{{ i.total_stock }}</td>  <!-- Display total stock -->
+                                    <td>
+                                        {% if i.id %}
+                                            <a href="{% url 'raw_materials_stock_history' i.id %}">
+                                                <button type="button" class="btn btn-purple waves-effect waves-light">
+                                                    <i class="mdi mdi-send mr-2"></i>History
+                                                </button>
+                                            </a>
+                                        {% else %}
+                                            No history available
+                                        {% endif %}
+                                    </td>
+                                   <td>
+                                        {% if i.id %}
+                                            <a href="{% url 'update_stocks' i.id %}" class="btn btn-sm btn-success">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                        {% else %}
+                                            <span>No stock to update</span>
+                                        {% endif %}
+                                    </td>
+
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
 
                     </div>
                 </div>
@@ -71,5 +123,10 @@
     </div><!-- container -->
 
 </div> <!-- Page content Wrapper -->
-
-{% endblock %}
+<script>
+    document.getElementById('send-request').addEventListener('click', function(event) {
+        event.preventDefault(); // Prevent form submission
+        window.location.href = "{% url 'raw_material_message_request' %}"; // Redirect to the request URL
+    });
+</script>
+{%endblock%}
