@@ -30,9 +30,11 @@ class designation_Form(forms.ModelForm):
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from .models import CustomUser
+from django import forms
+from django.contrib.auth.forms import UserCreationForm
+from .models import CustomUser
 
 class CustomUserForm(UserCreationForm):
-
     class Meta:
         model = CustomUser
         fields = [
@@ -42,8 +44,10 @@ class CustomUserForm(UserCreationForm):
             'department',
             'joining_date',
             'name',
+            'image',  # Added profile_photo field
             'password1',
             'password2',
+
         ]
         widgets = {
             'email': forms.EmailInput(attrs={
@@ -56,10 +60,10 @@ class CustomUserForm(UserCreationForm):
             }),
             'designation': forms.Select(attrs={
                 'class': 'form-control'
-            }),  # This field will be dynamically populated via AJAX
+            }),
             'department': forms.Select(attrs={
                 'class': 'form-control',
-                'id': 'id_department'  # Important for the AJAX script to work
+                'id': 'id_department'
             }),
             'joining_date': forms.DateInput(attrs={
                 'class': 'form-control',
@@ -69,9 +73,11 @@ class CustomUserForm(UserCreationForm):
                 'class': 'form-control',
                 'placeholder': 'Full Name'
             }),
+            'image': forms.ClearableFileInput(attrs={
+                'class': 'form-control-file'  # Custom widget for file input
+            }),  # Added profile_photo widget
         }
 
-    # Override the password fields separately, ensuring they use PasswordInput widgets
     password1 = forms.CharField(
         label="Password",
         widget=forms.PasswordInput(attrs={
@@ -86,6 +92,12 @@ class CustomUserForm(UserCreationForm):
             'placeholder': 'Confirm Password'
         })
     )
+
+
+
+
+
+
 
 
 class CustomLoginForm(forms.Form):

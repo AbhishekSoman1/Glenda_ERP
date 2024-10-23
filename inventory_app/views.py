@@ -4,7 +4,6 @@ import io
 from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.template.loader import get_template
-import pandas as pd
 from inventory_app.forms import Raw_materials_StockForm, Finished_Goods_StockForm,Damaged_Goods_StockForm
 from inventory_app.models import RawMaterialsStock, Finished_Goods_Stock, Damaged_Goods_Stock
 from production_app.models import water_Finished_Goods,damaged_Goods,Damaged_good_category
