@@ -141,6 +141,7 @@ def update_damage(request,id):
     return render(request,'production/update_damage.html',{'menus':menus,'form':form})
 
 
+
 def request_messages(request):
     menus = Menu.objects.prefetch_related('submenus').all()
     data = Finished_Goods_Request.objects.all()
@@ -187,6 +188,7 @@ def request_messages_detail(request, id):
         'data': request_data,
         'menus': menus
     })
+
 def search(request):
     # Fetch all categories
     categories = Damaged_good_category.objects.all()

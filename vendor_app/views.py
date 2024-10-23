@@ -2,11 +2,12 @@ import csv
 
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
+from django.template.loader import get_template
+from xhtml2pdf import pisa
 from django.db.models import Q
 from Glenda_App.models import Menu
 from register_app.forms import CustomUserForm
 from django.contrib import messages
-
 from register_app.models import CustomUser
 from vendor_app.forms import VendorRegisterForm
 from vendor_app.models import vendor_register
@@ -128,3 +129,4 @@ def vendor_search(request):
     }
 
     return render(request, 'vendor/view_vendor_list.html', context)
+

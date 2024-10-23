@@ -6,11 +6,11 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.template.loader import get_template
 from Glenda_App.models import Menu
 
+
 from inventory_app.forms import Raw_materials_StockForm, Finished_Goods_StockForm,Finished_Goods_RequestForm,Damaged_Goods_StockForm,Raw_materials_requestForm
 from inventory_app.models import RawMaterialsStock,Finished_Goods_Stock,Finished_Goods_Request,Damaged_Goods_Stock,Raw_material_request
 from production_app.models import water_Finished_Goods,water_Finished_goods_category,damaged_Goods,Damaged_good_category
 from register_app.models import department
-
 from purchase_app.models import RawMaterials,RawMaterialCategory
 from Glenda_App.models import Menu
 from xhtml2pdf import pisa
@@ -19,7 +19,6 @@ from openpyxl.styles import Font,Alignment
 from openpyxl import Workbook
 from django.http import FileResponse
 from reportlab.pdfgen import canvas
-
 from django.db.models import Sum
 
 # Create your views here.
@@ -306,6 +305,7 @@ def generate_csv(request, id):
 
     # Return the CSV file as a response
     return response
+
 def generate_full_pdf(request):
     view = Damaged_Goods_Stock.objects.all()
     filename = "full_analysis_report.pdf"
@@ -363,6 +363,7 @@ def damaged_search(request):
     return render(request, 'inventory/view_damaged_goods.html', context)
 
 
+
 def generate_excel(request):
     # Create a Workbook
     wb = Workbook()
@@ -399,7 +400,9 @@ def generate_excel(request):
 
     # Save the workbook to the response
     wb.save(response)
+
     return response
+
 
 def search(request):
     items = []
@@ -488,6 +491,7 @@ def finishedgoods_message_request(request):
 
 
 
+
 def raw_material_search(request):
     menus = Menu.objects.prefetch_related('submenus').all()
     stock = RawMaterialsStock.objects.all()  # All stock by default
@@ -559,3 +563,4 @@ def raw_material_message_request(request):
         'name': name,
         'view':view}
 )
+

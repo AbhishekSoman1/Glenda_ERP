@@ -27,5 +27,6 @@ urlpatterns = [
     path('damaged_search',views.damaged_search,name='damaged_search'),
     path('raw_material_search', views.raw_material_search, name='raw_material_search'),
     path('raw_material_message_request', views.raw_material_message_request, name='raw_material_message_request'),
+
 ]
 
