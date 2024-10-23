@@ -96,6 +96,10 @@ def vendor_list_csv(request):
 
     return response
 
+<<<<<<< HEAD
+
+
+=======
 def vendor_search(request):
     menus = Menu.objects.prefetch_related('submenus').all()
     vendor_list = CustomUser.objects.all()  # Default to all vendors
@@ -123,3 +127,4 @@ def vendor_search(request):
     }
 
     return render(request, 'vendor/view_vendor_list.html', context)
+>>>>>>> master
