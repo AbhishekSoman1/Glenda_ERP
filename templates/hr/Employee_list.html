@@ -65,17 +65,16 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                {% for i in view %}
+                                {% for i in users %}
                                 <tr>
-
-                                    <td><img src="{{ i.image.url }}" alt="Image description" width="70" height="70" />{{ i.name }}</td>
+                                    <td>{{ i.name }}</td>
                                     <td>{{ i.email }}</td>
                                     <td>{{ i.phone_number }}</td>
                                     <td>{{ i.department.dept_Name }}</td>
                                     <td>{{ i.designation.user_type }}</td>
-                                     <td><a href="{% url 'create_permission' i.id %}">
+                                     <td><a href="{% url 'AddDetails' %}">
                                             <button type="button" class="btn btn-purple waves-effect waves-light">
-                                               <i class="mdi mdi-send mr-2"></i>Add Privileges
+                                               <i class="mdi mdi-send mr-2"></i>Add Details
                                             </button>
 
                                     </a></td>
