@@ -6,5 +6,5 @@ urlpatterns = [
     path('view_employee_profile/<int:id>',views.view_employee_profile,name='view_employee_profile'),
     path('update_employee_details/<int:id>',views.update_employee_details,name='update_employee_details'),
     path('delete_employee_details/<int:id>',views.delete_employee_details,name='delete_employee_details'),
-    path('employee_search',views.employee_search,name='employee_search')
+    path('employee_search_and_export',views.employee_search_and_export,name='employee_search_and_export'),
 ]

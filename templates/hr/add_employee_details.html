@@ -15,7 +15,7 @@
                             <li class="breadcrumb-item active">Validation</li>
                         </ol>
                     </div>
-                    <h4 class="page-title"> Goods</h4>
+                    <h4 class="page-title">Employee Details</h4>
                 </div>
             </div>
         </div>
@@ -24,6 +24,14 @@
             <div class="col-lg-6">
                 <div class="card">
                     <div class="card-body">
+
+                        {% if messages %}
+                            <ul class="messages text-warning">
+                                {% for message in messages %}
+                                    <li class="{{ message.tags }}">{{ message }}</li>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
 
                         <h4 class="mt-0 header-title"></h4>
                         <form class="" action="" method="post" onsubmit="return showAlert();" enctype="multipart/form-data">
